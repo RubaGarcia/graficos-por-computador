@@ -2,6 +2,9 @@ import tkinter as tk
 import pandas as pd 
 import numpy as np
 
+# Variables globales
+coordenadas = []
+
 
 # Función para cambiar el tamaño de los puntos en el Canvas
 def cambiar_tamanio_punto():
@@ -15,11 +18,12 @@ def cambiar_color_punto():
 
 # Función para dibujar en el Canvas cuando se hace clic en él
 def dibujar(event):
-    global numeroPuntos  # Declarar la variable global
     x, y = event.x, event.y
     # Para dibujar las líneas
     coordenadas.append([x, y])
-    numeroPuntos += 1
+
+    print(coordenadas)
+    print (len(coordenadas))
 
     tamanio = float(canvas.itemcget(lapiz, "width"))
     color = canvas.itemcget(lapiz, "fill")
@@ -28,23 +32,23 @@ def dibujar(event):
 # Función para dibujar líneas en el Canvas
 def dibujar_linea():
 
-    if numeroPuntos >= 2:
+    if len(coordenadas) >= 2:
         tamanio = float(canvas.itemcget(lapiz, "width"))
         color = canvas.itemcget(lapiz, "fill")
         
-        canvas.create_line(coordenadas[numeroPuntos - 1][0], coordenadas[numeroPuntos - 1][1],
-                           coordenadas[numeroPuntos - 0][0], coordenadas[numeroPuntos - 0][1], fill=color, outline=color)
+        canvas.create_line(coordenadas[len(coordenadas) - 1][0], coordenadas[len(coordenadas) - 1][1],
+                           coordenadas[len(coordenadas) - 0][0], coordenadas[len(coordenadas) - 0][1], fill=color, outline=color)
 
-# Variables globales
-coordenadas = []
-numeroPuntos = 0
+def metodo_vacio():
+    print("Hola mundo")
+
 
 # Crear la ventana principal
 root = tk.Tk()
 root.title("Aplicación de Dibujo")
 
 # Crear el Canvas para dibujar
-canvas = tk.Canvas(root, width=400, height=400, bg="white")
+canvas = tk.Canvas(root, width=800, height=800, bg="white")
 canvas.pack(side=tk.LEFT, padx=10, pady=10)
 
 # Crear el lápiz (inicialmente negro)
@@ -81,5 +85,15 @@ btn_cambiar_color.pack()
 btn_dibujar_linea = tk.Button(frame, text="Dibujar Línea", command=dibujar_linea)
 btn_dibujar_linea.pack()
 
+#botones que serviran para cosas en algun futuro
+# Crear un botón para dibujar líneas
+btn_dibujar_linea_1 = tk.Button(frame, text="Dibujar Línea nueva", command=metodo_vacio)
+btn_dibujar_linea_1.pack()
+# Crear un botón para dibujar líneas
+btn_dibujar_linea_2 = tk.Button(frame, text="Dibujar Línea", command=metodo_vacio)
+btn_dibujar_linea_2.pack()
+# Crear un botón para dibujar líneas
+btn_dibujar_linea_3 = tk.Button(frame, text="Dibujar Línea", command=metodo_vacio)
+btn_dibujar_linea_3.pack()
 # Ejecutar la aplicación
 root.mainloop()
