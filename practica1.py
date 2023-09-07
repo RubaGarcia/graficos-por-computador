@@ -36,8 +36,9 @@ def dibujar_linea():
         tamanio = float(canvas.itemcget(lapiz, "width"))
         color = canvas.itemcget(lapiz, "fill")
         
-        canvas.create_line(coordenadas[len(coordenadas) - 1][0], coordenadas[len(coordenadas) - 1][1],
-                           coordenadas[len(coordenadas) - 0][0], coordenadas[len(coordenadas) - 0][1], fill=color, outline=color)
+        punto1=coordenadas[len(coordenadas) - 1]
+        punto2=coordenadas[len(coordenadas) - 2]
+        canvas.create_line(punto1[0], punto1[1], punto2[0], punto2[1], fill=color, width=tamanio)
 
 def metodo_vacio():
     print("Hola mundo")
@@ -50,6 +51,9 @@ root.title("Aplicación de Dibujo")
 # Crear el Canvas para dibujar
 canvas = tk.Canvas(root, width=800, height=800, bg="white")
 canvas.pack(side=tk.LEFT, padx=10, pady=10)
+canvas.create_line(400,0,400,800,fill="black", width=2)
+canvas.create_line(0,400,800,400,fill="black", width=2)
+
 
 # Crear el lápiz (inicialmente negro)
 lapiz = canvas.create_oval(0, 0, 5, 5, fill="black")
