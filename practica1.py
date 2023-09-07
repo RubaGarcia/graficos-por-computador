@@ -5,7 +5,6 @@ import numpy as np
 # Variables globales
 coordenadas = []
 
-
 # Función para cambiar el tamaño de los puntos en el Canvas
 def cambiar_tamanio_punto():
     nuevo_tamanio = float(entry_tamanio.get())
@@ -28,6 +27,12 @@ def dibujar(event):
     tamanio = float(canvas.itemcget(lapiz, "width"))
     color = canvas.itemcget(lapiz, "fill")
     canvas.create_oval(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
+    # Crear una etiqueta para mostrar las coordenadas
+    coordenadas_text = tk.StringVar()
+    coords_str= "coordenadas:" +str(x)+","+str(y)
+    coordenadas_text.set(coords_str)
+    coordenadas_label = tk.Label(frame, textvariable=coordenadas_text)
+    coordenadas_label.pack()
 
 # Función para dibujar líneas en el Canvas
 def dibujar_linea():
@@ -40,6 +45,8 @@ def dibujar_linea():
         punto2=coordenadas[len(coordenadas) - 2]
         canvas.create_line(punto1[0], punto1[1], punto2[0], punto2[1], fill=color, width=tamanio)
 
+
+
 def metodo_vacio():
     print("Hola mundo")
 
@@ -49,10 +56,10 @@ root = tk.Tk()
 root.title("Aplicación de Dibujo")
 
 # Crear el Canvas para dibujar
-canvas = tk.Canvas(root, width=800, height=800, bg="white")
+canvas = tk.Canvas(root, width=600, height=600, bg="white")
 canvas.pack(side=tk.LEFT, padx=10, pady=10)
-canvas.create_line(400,0,400,800,fill="black", width=2)
-canvas.create_line(0,400,800,400,fill="black", width=2)
+canvas.create_line(300,0,300,600,fill="black", width=2)
+canvas.create_line(0,300,600,300,fill="black", width=2)
 
 
 # Crear el lápiz (inicialmente negro)
@@ -89,7 +96,7 @@ btn_cambiar_color.pack()
 btn_dibujar_linea = tk.Button(frame, text="Dibujar Línea", command=dibujar_linea)
 btn_dibujar_linea.pack()
 
-#botones que serviran para cosas en algun futuro
+#TODO placeholders
 # Crear un botón para dibujar líneas
 btn_dibujar_linea_1 = tk.Button(frame, text="Dibujar Línea nueva", command=metodo_vacio)
 btn_dibujar_linea_1.pack()
@@ -100,4 +107,7 @@ btn_dibujar_linea_2.pack()
 btn_dibujar_linea_3 = tk.Button(frame, text="Dibujar Línea", command=metodo_vacio)
 btn_dibujar_linea_3.pack()
 # Ejecutar la aplicación
+
+
+
 root.mainloop()
