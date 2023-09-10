@@ -1,6 +1,4 @@
 import tkinter as tk
-import pandas as pd 
-import numpy as np
 
 # Variables globales
 coordenadas = []
@@ -29,7 +27,13 @@ def dibujar(event):
     canvas.create_oval(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
     # Crear una etiqueta para mostrar las coordenadas
     coordenadas_text = tk.StringVar()
-    coords_str= "coordenadas:" +str(x)+","+str(y)
+
+    #en caso de que sea la primera vez que se impriman las coordenadastendra el inidcador de las coordenadas
+    if len(coordenadas) < 2:
+        coords_str= "coordenadas:" +str(x-300)+","+str(-(y-300))
+    else:
+        coords_str=str(x-300)+","+str(-(y-300))
+
     coordenadas_text.set(coords_str)
     coordenadas_label = tk.Label(frame, textvariable=coordenadas_text)
     coordenadas_label.pack()
