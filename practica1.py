@@ -95,9 +95,79 @@ def DDA_algorithm(x1, y1, x2, y2):
         x -= xinc
         y -= yinc
         
+def dibujar_linea_bresenham():
+    
+        if len(coordenadas) >= 2:
+            punto1=coordenadas[len(coordenadas) - 1]
+            punto2=coordenadas[len(coordenadas) - 2]
 
+            x1=punto1[0]
+            x2=punto2[0]
+            y1=punto1[1]
+            y2=punto2[1]
 
+            if abs(y2-y1) < abs(x2-x1):
+                if(x1>x2):
+                    bresenham_algotithm_low(x2, y2, x1, y1)
+                else:
+                    bresenham_algotithm_low(x1, y1, x2, y2)
+            else:
+                if(y1>y2):
+                    bresenham_algotithm_high(x2, y2, x1, y1)
+                else:
+                    bresenham_algotithm_high(x1, y1, x2, y2)
+            
+    
 
+def bresenham_algotithm_low(x1, y1, x2, y2):
+    dx = x2 - x1
+    dy = y2 - y1
+
+    yi = 1
+
+    if dy < 0:
+        yi = -1
+        dy = -dy
+
+    D = (2*dy) - dx
+    y = y1
+
+    for x in range(x1, x2):
+        tamanio = float(canvas.itemcget(lapiz, "width"))
+        color = canvas.itemcget(lapiz, "fill")
+
+        canvas.create_oval(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
+
+        if D > 0:
+            y = y + yi
+            D = D + (2*dy) - (2*dx)
+        else:
+            D = D + 2*dy
+
+def bresenham_algotithm_high(x1, y1, x2, y2):
+    dx = x2 - x1
+    dy = y2 - y1
+
+    xi = 1
+
+    if dx < 0:
+        xi = -1
+        dx = -dx
+
+    D = (2*dx) - dy
+    x = x1
+
+    for y in range(y1, y2):
+        tamanio = float(canvas.itemcget(lapiz, "width"))
+        color = canvas.itemcget(lapiz, "fill")
+
+        canvas.create_oval(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
+
+        if D > 0:
+            x = x + xi
+            D = D + (2*dx) - (2*dy)
+        else:
+            D = D + 2*dx
 
 def metodo_vacio():
     print("Hola mundo")
@@ -158,7 +228,7 @@ slope_intercept.pack()
 btn_dda = tk.Button(frame, text="DDA", command=dibujar_linea_DDA)
 btn_dda.pack()
 # Crear un botón para dibujar líneas
-btn_bresenham = tk.Button(frame, text="Bresenham", command=metodo_vacio)
+btn_bresenham = tk.Button(frame, text="Bresenham", command=dibujar_linea_bresenham)
 btn_bresenham.pack()
 # Ejecutar la aplicación
 
