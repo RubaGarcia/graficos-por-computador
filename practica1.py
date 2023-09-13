@@ -169,6 +169,54 @@ def bresenham_algotithm_high(x1, y1, x2, y2):
         else:
             D = D + 2*dx
 
+
+def dibujar_linea_slope_intercept():
+    if len(coordenadas) >= 2:
+        punto1=coordenadas[len(coordenadas) - 1]
+        punto2=coordenadas[len(coordenadas) - 2]
+
+        x1=punto1[0]
+        x2=punto2[0]
+        y1=punto1[1]
+        y2=punto2[1]
+
+        slope_intercept_algorithm(x1, y1, x2, y2)
+
+def slope_intercept_algorithm(x1, y1, x2, y2):
+    dx = x2 - x1
+    dy = y2 - y1
+
+    m = dy/dx
+
+    b = y1 - m*x1
+
+    if abs(y2-y1) < abs(x2-x1):
+        if(x1>x2):
+            slope_intercept_algorithm_low(x2, y2, x1, y1, m, b)
+        else:
+            slope_intercept_algorithm_low(x1, y1, x2, y2, m, b)
+    else:
+        if(y1>y2):
+            slope_intercept_algorithm_high(x2, y2, x1, y1, m, b)
+        else:
+            slope_intercept_algorithm_high(x1, y1, x2, y2, m, b)
+
+def slope_intercept_algorithm_low(x1, y1, x2, y2, m, b):
+    for x in range(x1, x2):
+        y = m*x + b
+        tamanio = float(canvas.itemcget(lapiz, "width"))
+        color = canvas.itemcget(lapiz, "fill")
+
+        canvas.create_oval(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
+
+def slope_intercept_algorithm_high(x1, y1, x2, y2, m, b):
+    for y in range(y1, y2):
+        x = (y - b)/m
+        tamanio = float(canvas.itemcget(lapiz, "width"))
+        color = canvas.itemcget(lapiz, "fill")
+
+        canvas.create_oval(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
+    
 def metodo_vacio():
     print("Hola mundo")
 
@@ -222,7 +270,7 @@ btn_dibujar_linea.pack()
 
 
 # Crear un botón para dibujar líneas
-slope_intercept = tk.Button(frame, text="Dibujar Línea slope Intercept", command=metodo_vacio)
+slope_intercept = tk.Button(frame, text="Dibujar Línea slope Intercept", command=dibujar_linea_slope_intercept)
 slope_intercept.pack()
 # Crear un botón para dibujar líneas
 btn_dda = tk.Button(frame, text="DDA", command=dibujar_linea_DDA)
