@@ -50,6 +50,31 @@ def dibujar_linea():
         canvas.create_line(punto1[0], punto1[1], punto2[0], punto2[1], fill=color, width=tamanio)
 
 
+def DDA_algorithm(x1,y1, x2, y2):
+    dx=x1-x2
+    dy=y1-y2
+
+    #calculo de la pendiente
+    m=dx/dy
+
+    steps=max(dx, dy)
+
+    xinc=dx/steps
+    yinc=dy/steps
+
+    x=float(x1)
+    y=float(y1)
+
+    tamanio = float(canvas.itemcget(lapiz, "width"))
+    color = canvas.itemcget(lapiz, "fill")
+    
+    for i in range(steps):
+        canvas.create_oval(x1 - tamanio, y1 - tamanio, x1 + tamanio, y1 + tamanio, fill=color, outline=color)
+
+        x += xinc
+        y += yinc
+
+
 
 def metodo_vacio():
     print("Hola mundo")
