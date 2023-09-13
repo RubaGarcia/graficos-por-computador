@@ -1,4 +1,5 @@
 import tkinter as tk
+import time
 
 # Variables globales
 coordenadas = []
@@ -59,6 +60,44 @@ def dibujar_linea():
         canvas.create_line(punto1[0], punto1[1], punto2[0], punto2[1], fill=color, width=tamanio)
 
 
+def dibujar_linea_DDA():
+
+    if len(coordenadas) >= 2:
+        
+        punto1=coordenadas[len(coordenadas) - 1]
+        punto2=coordenadas[len(coordenadas) - 2]
+
+        DDA_algorithm(punto1[0], punto1[1],punto2[0], punto2[1])
+
+
+def DDA_algorithm(x1, y1, x2, y2):
+
+    dx=x1-x2
+    dy=y1-y2
+
+
+    steps=max(dx, dy)
+
+    xinc=dx/steps
+    yinc=dy/steps
+
+    x=float(x1)
+    y=float(y1)
+
+    
+
+    for i in range(steps):
+        tamanio = float(canvas.itemcget(lapiz, "width"))
+        color = canvas.itemcget(lapiz, "fill")
+
+        canvas.create_oval(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
+
+        x -= xinc
+        y -= yinc
+        
+
+
+
 
 def metodo_vacio():
     print("Hola mundo")
@@ -71,6 +110,8 @@ root.title("Aplicación de Dibujo")
 # Crear el Canvas para dibujar
 canvas = tk.Canvas(root, width=600, height=600, bg="white")
 canvas.pack(side=tk.LEFT, padx=10, pady=10)
+
+#ejes del canvas
 canvas.create_line(300,0,300,600,fill="black", width=2)
 canvas.create_line(0,300,600,300,fill="black", width=2)
 
@@ -111,14 +152,14 @@ btn_dibujar_linea.pack()
 
 
 # Crear un botón para dibujar líneas
-btn_slope_intercept = tk.Button(frame, text="Slope intercept", command=metodo_vacio)
-btn_slope_intercept.pack()
+slope_intercept = tk.Button(frame, text="Dibujar Línea slope Intercept", command=metodo_vacio)
+slope_intercept.pack()
 # Crear un botón para dibujar líneas
-btn_DDA = tk.Button(frame, text="DDA", command=metodo_vacio)
-btn_DDA.pack()
+btn_dda = tk.Button(frame, text="DDA", command=dibujar_linea_DDA)
+btn_dda.pack()
 # Crear un botón para dibujar líneas
-btn_Bresenham = tk.Button(frame, text="Bresenham", command=metodo_vacio)
-btn_Bresenham.pack()
+btn_bresenham = tk.Button(frame, text="Bresenham", command=metodo_vacio)
+btn_bresenham.pack()
 # Ejecutar la aplicación
 
 
