@@ -63,7 +63,7 @@ def dibujar_linea_DDA():
 
 
 def DDA_algorithm(x1, y1, x2, y2):
-
+#TODO aquí hay bugs en funcion de en que sentido se pongan los puntos
 
     dx=x1-x2
     dy=y1-y2
