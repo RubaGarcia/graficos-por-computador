@@ -38,6 +38,15 @@ def dibujar(event):
     coordenadas_label = tk.Label(frame, textvariable=coordenadas_text)
     coordenadas_label.pack()
 
+
+def dibujar_punto_linea(x1,y1, x2, y2):
+    tamanio = float(canvas.itemcget(lapiz, "width"))
+    color = canvas.itemcget(lapiz, "fill")
+    canvas.create_oval(x1 - tamanio, y1 - tamanio, x1 + tamanio, y1 + tamanio, fill=color, outline=color)
+    canvas.create_oval(x2 - tamanio, y2 - tamanio, x2 + tamanio, y2 + tamanio, fill=color, outline=color)
+    canvas.create_line(x1, y1, x2, y2, fill=color, width=tamanio)
+    
+
 # Función para dibujar líneas en el Canvas
 def dibujar_linea():
 
@@ -100,16 +109,16 @@ btn_cambiar_color.pack()
 btn_dibujar_linea = tk.Button(frame, text="Dibujar Línea", command=dibujar_linea)
 btn_dibujar_linea.pack()
 
-#TODO placeholders
+
 # Crear un botón para dibujar líneas
-btn_dibujar_linea_1 = tk.Button(frame, text="Dibujar Línea nueva", command=metodo_vacio)
-btn_dibujar_linea_1.pack()
+btn_slope_intercept = tk.Button(frame, text="Slope intercept", command=metodo_vacio)
+btn_slope_intercept.pack()
 # Crear un botón para dibujar líneas
-btn_dibujar_linea_2 = tk.Button(frame, text="Dibujar Línea", command=metodo_vacio)
-btn_dibujar_linea_2.pack()
+btn_DDA = tk.Button(frame, text="DDA", command=metodo_vacio)
+btn_DDA.pack()
 # Crear un botón para dibujar líneas
-btn_dibujar_linea_3 = tk.Button(frame, text="Dibujar Línea", command=metodo_vacio)
-btn_dibujar_linea_3.pack()
+btn_Bresenham = tk.Button(frame, text="Bresenham", command=metodo_vacio)
+btn_Bresenham.pack()
 # Ejecutar la aplicación
 
 
