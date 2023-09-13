@@ -1,4 +1,5 @@
 import tkinter as tk
+import time
 
 # Variables globales
 coordenadas = []
@@ -50,12 +51,23 @@ def dibujar_linea():
         canvas.create_line(punto1[0], punto1[1], punto2[0], punto2[1], fill=color, width=tamanio)
 
 
-def DDA_algorithm(x1,y1, x2, y2):
+def dibujar_linea_DDA():
+    print("llamado a dibujar linea DDA")
+
+    if len(coordenadas) >= 2:
+        
+        punto1=coordenadas[len(coordenadas) - 1]
+        punto2=coordenadas[len(coordenadas) - 2]
+
+        DDA_algorithm(punto1[0], punto1[1],punto2[0], punto2[1])
+
+
+def DDA_algorithm(x1, y1, x2, y2):
+
+
     dx=x1-x2
     dy=y1-y2
 
-    #calculo de la pendiente
-    m=dx/dy
 
     steps=max(dx, dy)
 
@@ -65,14 +77,18 @@ def DDA_algorithm(x1,y1, x2, y2):
     x=float(x1)
     y=float(y1)
 
-    tamanio = float(canvas.itemcget(lapiz, "width"))
-    color = canvas.itemcget(lapiz, "fill")
     
-    for i in range(steps):
-        canvas.create_oval(x1 - tamanio, y1 - tamanio, x1 + tamanio, y1 + tamanio, fill=color, outline=color)
 
-        x += xinc
-        y += yinc
+    for i in range(steps):
+        tamanio = float(canvas.itemcget(lapiz, "width"))
+        color = canvas.itemcget(lapiz, "fill")
+
+        canvas.create_oval(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
+
+        x -= xinc
+        y -= yinc
+        
+
 
 
 
@@ -122,18 +138,18 @@ btn_cambiar_color = tk.Button(frame, text="Cambiar Color", command=cambiar_color
 btn_cambiar_color.pack()
 
 # Crear un botón para dibujar líneas
-btn_dibujar_linea = tk.Button(frame, text="Dibujar Línea", command=dibujar_linea)
+btn_dibujar_linea = tk.Button(frame, text="Dibujar Línea normal", command=dibujar_linea)
 btn_dibujar_linea.pack()
 
 #TODO placeholders
 # Crear un botón para dibujar líneas
-btn_dibujar_linea_1 = tk.Button(frame, text="Dibujar Línea nueva", command=metodo_vacio)
+btn_dibujar_linea_1 = tk.Button(frame, text="DDA algorithm", command=dibujar_linea_DDA)
 btn_dibujar_linea_1.pack()
 # Crear un botón para dibujar líneas
-btn_dibujar_linea_2 = tk.Button(frame, text="Dibujar Línea", command=metodo_vacio)
+btn_dibujar_linea_2 = tk.Button(frame, text="slope intercept", command=metodo_vacio)
 btn_dibujar_linea_2.pack()
 # Crear un botón para dibujar líneas
-btn_dibujar_linea_3 = tk.Button(frame, text="Dibujar Línea", command=metodo_vacio)
+btn_dibujar_linea_3 = tk.Button(frame, text="Bresenham", command=metodo_vacio)
 btn_dibujar_linea_3.pack()
 # Ejecutar la aplicación
 
