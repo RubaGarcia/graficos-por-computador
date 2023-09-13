@@ -1,5 +1,4 @@
 import tkinter as tk
-import time
 
 # Variables globales
 coordenadas = []
@@ -180,26 +179,25 @@ def dibujar_linea_slope_intercept():
         y1=punto1[1]
         y2=punto2[1]
 
-        slope_intercept_algorithm(x1, y1, x2, y2)
+        dx = x2 - x1
+        dy = y2 - y1
 
-def slope_intercept_algorithm(x1, y1, x2, y2):
-    dx = x2 - x1
-    dy = y2 - y1
+        m = dy/dx
 
-    m = dy/dx
+        b = y1 - m*x1
 
-    b = y1 - m*x1
-
-    if abs(y2-y1) < abs(x2-x1):
-        if(x1>x2):
-            slope_intercept_algorithm_low(x2, y2, x1, y1, m, b)
+        if abs(y2-y1) < abs(x2-x1):
+            if(x1>x2):
+                slope_intercept_algorithm_low(x2, y2, x1, y1, m, b)
+            else:
+                slope_intercept_algorithm_low(x1, y1, x2, y2, m, b)
         else:
-            slope_intercept_algorithm_low(x1, y1, x2, y2, m, b)
-    else:
-        if(y1>y2):
-            slope_intercept_algorithm_high(x2, y2, x1, y1, m, b)
-        else:
-            slope_intercept_algorithm_high(x1, y1, x2, y2, m, b)
+            if(y1>y2):
+                slope_intercept_algorithm_high(x2, y2, x1, y1, m, b)
+            else:
+                slope_intercept_algorithm_high(x1, y1, x2, y2, m, b)
+
+    
 
 def slope_intercept_algorithm_low(x1, y1, x2, y2, m, b):
     for x in range(x1, x2):
