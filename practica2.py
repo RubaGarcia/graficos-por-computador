@@ -128,8 +128,17 @@ def traslation():
     canvas.delete("all")
 
 
-    desp_x=float(entry_trasl_x.get())
-    desp_y=float(entry_trasl_y.get())
+    #ejes del canvas
+    canvas.create_line(300,0,300,600,fill="black", width=2)
+    canvas.create_line(0,300,600,300,fill="black", width=2)
+
+    #importar las coordenadas de la traslacion
+    desp_x=int(entry_trasl_x.get())
+    desp_y=int(entry_trasl_y.get())
+    
+    tamanio = float(canvas.itemcget(lapiz, "width"))
+    color = canvas.itemcget(lapiz, "fill")
+
     for i in range(len(coordenadas)):
 
         punto=coordenadas[i]
@@ -138,9 +147,9 @@ def traslation():
 
         x+=desp_x
         y+=desp_y
+        
+        
 
-        tamanio = float(canvas.itemcget(lapiz, "width"))
-        color = canvas.itemcget(lapiz, "fill")
         canvas.create_oval(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
     
     for j in range(len(lineas)):
