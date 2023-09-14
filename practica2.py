@@ -123,7 +123,49 @@ def bresenham_algotithm_high(x1, y1, x2, y2):
             D = D + 2*dx
 
 
+
+def traslation():
+    canvas.delete("all")
+
+
+    desp_x=float(entry_trasl_x.get())
+    desp_y=float(entry_trasl_y.get())
+    for i in range(len(coordenadas)):
+
+        punto=coordenadas[i]
+        x=punto[0]
+        y=punto[1]
+
+        x+=desp_x
+        y+=desp_y
+
+        tamanio = float(canvas.itemcget(lapiz, "width"))
+        color = canvas.itemcget(lapiz, "fill")
+        canvas.create_oval(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
     
+    for j in range(len(lineas)):
+         
+        punto1=coordenadas[lineas[j]]
+        punto2=coordenadas[lineas[j]-1]
+
+        x1=punto1[0]
+        x2=punto2[0]
+        y1=punto1[1]
+        y2=punto2[1]
+
+        if abs(y2-y1) < abs(x2-x1):
+            if(x1>x2):
+                bresenham_algotithm_low(x2, y2, x1, y1)
+            else:
+                bresenham_algotithm_low(x1, y1, x2, y2)
+        else:
+            if(y1>y2):
+                bresenham_algotithm_high(x2, y2, x1, y1)
+            else:
+                bresenham_algotithm_high(x1, y1, x2, y2)
+
+
+
 def metodo_vacio():
     print("Hola mundo")
 
@@ -179,7 +221,7 @@ btn_bresenham.pack()
 #botones con funciones de traslaciones
 
 #Traslacion
-btn_trasl = tk.Button(frame, text="Traslación", command=metodo_vacio)
+btn_trasl = tk.Button(frame, text="Traslación", command=traslation)
 btn_trasl.pack()
 
 label_trasl_x = tk.Label(frame, text="Traslación en x")
