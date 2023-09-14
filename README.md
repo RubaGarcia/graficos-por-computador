@@ -1,11 +1,14 @@
 # graficos-por-computador
 Git en el que se almacenarán las prácticas de la asignatura de gráficos por computador
+
 ## Índice de prácticas
 
-1. Line algorithms
-2. 2D transformations
-3. Fractals
-4. L-Systems
+1. [Line algorithms] (#Line-algorithms)
+2. [2D transformations] (#2D transformations)
+3. [Fractals] (#Fractals)
+4. [L-Systems] (#L-systems)
+
+<a name="Line-algorithms"></a>
 
 ### Line algorithms
 En esta práctica se aprenderá como funcionan los algoritmos de dibujado de líneas, utilizando los 3 más importantes: **Slope Intercept, DDA y Bresenham**.
