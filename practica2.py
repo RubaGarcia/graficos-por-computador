@@ -17,30 +17,39 @@ def cambiar_color_punto():
     canvas.itemconfig(lapiz, fill=nuevo_color)
 
 # Función para dibujar en el Canvas cuando se hace clic en él
+
 def dibujar(event):
     x, y = event.x, event.y
     # Para dibujar las líneas
     coordenadas.append([x, y])
 
     print(coordenadas)
-    print (len(coordenadas))
+    print(len(coordenadas))
 
-    tamanio = float(canvas.itemcget(lapiz, "width"))
-    color = canvas.itemcget(lapiz, "fill")
+    # Obtener el tamaño del punto como cadena
+    tamanio_str = entry_tamanio.get()
+
+    # Verificar si la cadena tiene un valor válido
+    if tamanio_str:
+        tamanio = float(tamanio_str)
+    else:
+        tamanio = 1.0  # Valor predeterminado en caso de que no haya un tamaño válido
+
+    color = color_var.get()
     canvas.create_oval(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
+
     # Crear una etiqueta para mostrar las coordenadas
     coordenadas_text = tk.StringVar()
 
-    #en caso de que sea la primera vez que se impriman las coordenadastendra el inidcador de las coordenadas
+    # en caso de que sea la primera vez que se impriman las coordenadas tendrá el indicador de las coordenadas
     if len(coordenadas) < 2:
-        coords_str= "coordenadas:" +str(x-300)+","+str(-(y-300))
+        coords_str = "coordenadas:" + str(x - 300) + "," + str(-(y - 300))
     else:
-        coords_str=str(x-300)+","+str(-(y-300))
+        coords_str = str(x - 300) + "," + str(-(y - 300))
 
     coordenadas_text.set(coords_str)
     coordenadas_label = tk.Label(frame, textvariable=coordenadas_text)
     coordenadas_label.pack()
-
 
 
         
@@ -48,7 +57,7 @@ def dibujar_linea_bresenham():
     
         if len(coordenadas) >= 2:
 
-            lineas.append(len(coordenadas-1))
+            lineas.append(len(coordenadas) - 1)
 
             punto1=coordenadas[len(coordenadas) - 1]
             punto2=coordenadas[len(coordenadas) - 2]
@@ -127,48 +136,48 @@ def bresenham_algotithm_high(x1, y1, x2, y2):
 def traslation():
     canvas.delete("all")
 
+    # Ejes del canvas
+    canvas.create_line(300, 0, 300, 600, fill="black", width=2)
+    canvas.create_line(0, 300, 600, 300, fill="black", width=2)
 
-    #ejes del canvas
-    canvas.create_line(300,0,300,600,fill="black", width=2)
-    canvas.create_line(0,300,600,300,fill="black", width=2)
+    # Importar las coordenadas de la traslación
+    desp_x = int(entry_trasl_x.get())
+    desp_y = int(entry_trasl_y.get())
 
-    #importar las coordenadas de la traslacion
-    desp_x=int(entry_trasl_x.get())
-    desp_y=int(entry_trasl_y.get())
-    
-    tamanio = float(canvas.itemcget(lapiz, "width"))
+    # Obtener el tamaño del punto como cadena
+    tamanio_str = canvas.itemcget(lapiz, "width")
+
+    # Verificar si la cadena tiene un valor válido
+    if tamanio_str:
+        tamanio = float(tamanio_str)
+    else:
+        tamanio = 1.0  # Valor predeterminado en caso de que no haya un tamaño válido
+
     color = canvas.itemcget(lapiz, "fill")
 
     for i in range(len(coordenadas)):
-
-        punto=coordenadas[i]
-        x=punto[0]
-        y=punto[1]
-
-        x+=desp_x
-        y+=desp_y
-        
-        
-
+        punto = coordenadas[i]
+        x = punto[0]
+        y = punto[1]
+        x += desp_x
+        y += desp_y
         canvas.create_oval(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
-    
+
     for j in range(len(lineas)):
-         
-        punto1=coordenadas[lineas[j]]
-        punto2=coordenadas[lineas[j]-1]
+        punto1 = coordenadas[lineas[j]]
+        punto2 = coordenadas[lineas[j] - 1]
+        x1 = punto1[0]
+        x2 = punto2[0]
+        y1 = punto1[1]
+        y2 = punto2[1]
 
-        x1=punto1[0]
-        x2=punto2[0]
-        y1=punto1[1]
-        y2=punto2[1]
-
-        if abs(y2-y1) < abs(x2-x1):
-            if(x1>x2):
+        if abs(y2 - y1) < abs(x2 - x1):
+            if x1 > x2:
                 bresenham_algotithm_low(x2, y2, x1, y1)
             else:
                 bresenham_algotithm_low(x1, y1, x2, y2)
         else:
-            if(y1>y2):
+            if y1 > y2:
                 bresenham_algotithm_high(x2, y2, x1, y1)
             else:
                 bresenham_algotithm_high(x1, y1, x2, y2)
