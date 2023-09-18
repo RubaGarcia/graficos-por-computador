@@ -222,9 +222,13 @@ def metodo_vacio():
 # Crear la ventana principal
 root = tk.Tk()
 root.title("Aplicación de Dibujo")
+root.minsize(800, 800)
+
 
 # Crear el Canvas para dibujar
-canvas = tk.Canvas(root, width=600, height=600, bg="white")
+CANVAS_WIDTH = 600
+CANVAS_HEIGHT = 600
+canvas = tk.Canvas(root, width=CANVAS_WIDTH, height=CANVAS_HEIGHT, bg="white")
 canvas.pack(side=tk.LEFT, padx=10, pady=10)
 
 #ejes del canvas
@@ -268,7 +272,7 @@ btn_dibujar_linea.pack()
 
 
 # Crear un botón para dibujar líneas
-slope_intercept = tk.Button(frame, text="Dibujar Línea slope Intercept", command=dibujar_linea_slope_intercept)
+slope_intercept = tk.Button(frame, text="Slope Intercept", command=dibujar_linea_slope_intercept)
 slope_intercept.pack()
 # Crear un botón para dibujar líneas
 btn_dda = tk.Button(frame, text="DDA", command=dibujar_linea_DDA)
