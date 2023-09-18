@@ -200,20 +200,26 @@ def dibujar_linea_slope_intercept():
     
 
 def slope_intercept_algorithm_low(x1, y1, x2, y2, m, b):
-    for x in range(x1, x2):
-        y = m*x + b
+    x = x1
+    while x < x2:
+        y = m * x + b
         tamanio = float(canvas.itemcget(lapiz, "width"))
         color = canvas.itemcget(lapiz, "fill")
 
         canvas.create_oval(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
+
+        x += tamanio  # Incrementar x en cada iteración del bucle while
 
 def slope_intercept_algorithm_high(x1, y1, x2, y2, m, b):
-    for y in range(y1, y2):
-        x = (y - b)/m
+    y = y1
+    while y < y2:
+        x = (y - b) / m
         tamanio = float(canvas.itemcget(lapiz, "width"))
         color = canvas.itemcget(lapiz, "fill")
 
         canvas.create_oval(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
+
+        y += tamanio  # Incrementar y en cada iteración del bucle while
     
 def metodo_vacio():
     print("Hola mundo")
@@ -222,12 +228,13 @@ def metodo_vacio():
 # Crear la ventana principal
 root = tk.Tk()
 root.title("Aplicación de Dibujo")
-root.minsize(800, 800)
+
 
 
 # Crear el Canvas para dibujar
 CANVAS_WIDTH = 600
 CANVAS_HEIGHT = 600
+
 canvas = tk.Canvas(root, width=CANVAS_WIDTH, height=CANVAS_HEIGHT, bg="white")
 canvas.pack(side=tk.LEFT, padx=10, pady=10)
 
