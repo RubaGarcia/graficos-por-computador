@@ -244,8 +244,8 @@ canvas = tk.Canvas(root, width=CANVAS_WIDTH, height=CANVAS_HEIGHT, bg="white")
 canvas.pack(side=tk.LEFT, padx=10, pady=10)
 
 #ejes del canvas
-canvas.create_line(300,0,300,600,fill="black", width=2)
-canvas.create_line(0,300,600,300,fill="black", width=2)
+canvas.create_line(300,0,300,600,fill="black", width=1)
+canvas.create_line(0,300,600,300,fill="black", width=1)
 
 
 # Crear el lápiz (inicialmente negro)
