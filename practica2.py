@@ -137,8 +137,8 @@ def traslation():
     canvas.delete("all")
 
     # Ejes del canvas
-    canvas.create_line(300, 0, 300, 600, fill="black", width=2)
-    canvas.create_line(0, 300, 600, 300, fill="black", width=2)
+    canvas.create_line(300, 0, 300, 600, fill="black", width=1)
+    canvas.create_line(0, 300, 600, 300, fill="black", width=1)
 
     # Importar las coordenadas de la traslación
     desp_x = int(entry_trasl_x.get())
@@ -197,8 +197,8 @@ canvas = tk.Canvas(root, width=600, height=600, bg="white")
 canvas.pack(side=tk.LEFT, padx=10, pady=10)
 
 #ejes del canvas
-canvas.create_line(300,0,300,600,fill="black", width=2)
-canvas.create_line(0,300,600,300,fill="black", width=2)
+canvas.create_line(300,0,300,600,fill="black", width=1)
+canvas.create_line(0,300,600,300,fill="black", width=1)
 
 
 # Crear el lápiz (inicialmente negro)
