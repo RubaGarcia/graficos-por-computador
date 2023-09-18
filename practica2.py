@@ -36,7 +36,7 @@ def dibujar(event):
         tamanio = 1.0  # Valor predeterminado en caso de que no haya un tamaño válido
 
     color = color_var.get()
-    canvas.create_oval(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
+    canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
     
     # Crear una etiqueta para mostrar las coordenadas
     coordenadas_text = tk.StringVar()
@@ -98,7 +98,7 @@ def bresenham_algotithm_low(x1, y1, x2, y2):
         tamanio = float(canvas.itemcget(lapiz, "width"))
         color = canvas.itemcget(lapiz, "fill")
 
-        canvas.create_oval(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
+        canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
 
         if D > 0:
             y = y + yi
@@ -123,7 +123,7 @@ def bresenham_algotithm_high(x1, y1, x2, y2):
         tamanio = float(canvas.itemcget(lapiz, "width"))
         color = canvas.itemcget(lapiz, "fill")
 
-        canvas.create_oval(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
+        canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
 
         if D > 0:
             x = x + xi
@@ -161,7 +161,7 @@ def traslation():
         y = punto[1]
         x += desp_x
         y += desp_y
-        canvas.create_oval(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
+        canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
 
     for j in range(len(lineas)):
         punto1 = coordenadas[lineas[j]]
@@ -202,7 +202,7 @@ canvas.create_line(0,300,600,300,fill="black", width=1)
 
 
 # Crear el lápiz (inicialmente negro)
-lapiz = canvas.create_oval(0, 0, 5, 5, fill="black")
+lapiz = canvas.create_rectangle(0, 0, 5, 5, fill="black")
 
 # Configurar eventos de dibujo en el Canvas
 canvas.bind("<Button-1>", dibujar)
