@@ -24,7 +24,7 @@ def dibujar(event):
 
     tamanio = float(canvas.itemcget(lapiz, "width"))
     color = canvas.itemcget(lapiz, "fill")
-    canvas.create_oval(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
+    canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
     # Crear una etiqueta para mostrar las coordenadas
     coordenadas_text = tk.StringVar()
 
@@ -42,8 +42,8 @@ def dibujar(event):
 def dibujar_punto_linea(x1,y1, x2, y2):
     tamanio = float(canvas.itemcget(lapiz, "width"))
     color = canvas.itemcget(lapiz, "fill")
-    canvas.create_oval(x1 - tamanio, y1 - tamanio, x1 + tamanio, y1 + tamanio, fill=color, outline=color)
-    canvas.create_oval(x2 - tamanio, y2 - tamanio, x2 + tamanio, y2 + tamanio, fill=color, outline=color)
+    canvas.create_rectangle(x1 - tamanio, y1 - tamanio, x1 + tamanio, y1 + tamanio, fill=color, outline=color)
+    canvas.create_rectangle(x2 - tamanio, y2 - tamanio, x2 + tamanio, y2 + tamanio, fill=color, outline=color)
     canvas.create_line(x1, y1, x2, y2, fill=color, width=tamanio)
     
 
@@ -89,7 +89,7 @@ def DDA_algorithm(x1, y1, x2, y2):
         tamanio = float(canvas.itemcget(lapiz, "width"))
         color = canvas.itemcget(lapiz, "fill")
 
-        canvas.create_oval(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
+        canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
 
         x -= xinc
         y -= yinc
@@ -131,17 +131,20 @@ def bresenham_algotithm_low(x1, y1, x2, y2):
     D = (2*dy) - dx
     y = y1
 
-    for x in range(x1, x2):
+    while x1 < x2:
         tamanio = float(canvas.itemcget(lapiz, "width"))
         color = canvas.itemcget(lapiz, "fill")
 
-        canvas.create_oval(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
+        canvas.create_rectangle(x1 - tamanio, y - tamanio, x1 + tamanio, y + tamanio, fill=color, outline=color)
 
         if D > 0:
             y = y + yi
-            D = D + (2*dy) - (2*dx)
+            D = D + (2 * dy) - (2 * dx)
         else:
-            D = D + 2*dy
+            D = D + 2 * dy
+
+        x1 += tamanio  # Incrementar x1 en cada iteración para avanzar a la siguiente posición de x1
+
 
 def bresenham_algotithm_high(x1, y1, x2, y2):
     dx = x2 - x1
@@ -156,17 +159,19 @@ def bresenham_algotithm_high(x1, y1, x2, y2):
     D = (2*dx) - dy
     x = x1
 
-    for y in range(y1, y2):
+    while y1 < y2:
         tamanio = float(canvas.itemcget(lapiz, "width"))
         color = canvas.itemcget(lapiz, "fill")
 
-        canvas.create_oval(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
+        canvas.create_rectangle(x - tamanio, y1 - tamanio, x + tamanio, y1 + tamanio, fill=color, outline=color)
 
         if D > 0:
             x = x + xi
             D = D + (2*dx) - (2*dy)
         else:
             D = D + 2*dx
+        
+        y1 += tamanio 
 
 
 def dibujar_linea_slope_intercept():
@@ -206,7 +211,7 @@ def slope_intercept_algorithm_low(x1, y1, x2, y2, m, b):
         tamanio = float(canvas.itemcget(lapiz, "width"))
         color = canvas.itemcget(lapiz, "fill")
 
-        canvas.create_oval(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
+        canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
 
         x += tamanio  # Incrementar x en cada iteración del bucle while
 
@@ -217,7 +222,7 @@ def slope_intercept_algorithm_high(x1, y1, x2, y2, m, b):
         tamanio = float(canvas.itemcget(lapiz, "width"))
         color = canvas.itemcget(lapiz, "fill")
 
-        canvas.create_oval(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
+        canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
 
         y += tamanio  # Incrementar y en cada iteración del bucle while
     
@@ -244,7 +249,7 @@ canvas.create_line(0,300,600,300,fill="black", width=2)
 
 
 # Crear el lápiz (inicialmente negro)
-lapiz = canvas.create_oval(0, 0, 5, 5, fill="black")
+lapiz = canvas.create_rectangle(0, 0, 5, 5, fill="black")
 
 # Configurar eventos de dibujo en el Canvas
 canvas.bind("<Button-1>", dibujar)

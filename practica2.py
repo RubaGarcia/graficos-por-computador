@@ -37,7 +37,7 @@ def dibujar(event):
 
     color = color_var.get()
     canvas.create_oval(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
-
+    
     # Crear una etiqueta para mostrar las coordenadas
     coordenadas_text = tk.StringVar()
 
