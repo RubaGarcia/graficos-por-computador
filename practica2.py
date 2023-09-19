@@ -5,6 +5,9 @@ coordenadas = []
 # array que indica donde están las líneas
 lineas = []
 
+# Crear el lápiz (inicialmente negro)
+#lapiz = canvas.create_rectangle(0, 0, 5, 5, fill="black", width=1.0)
+
 
 # Función para cambiar el tamaño de los puntos en el Canvas
 def cambiar_tamanio_punto():
@@ -147,7 +150,7 @@ def traslation():
     # Obtener el tamaño del punto como cadena
     tamanio_str = canvas.itemcget(lapiz, "width")
 
-    # Verificar si la cadena tiene un valor válido
+    # Verificar si la cadena tiene un valor válido o usar un valor predeterminado
     if tamanio_str:
         tamanio = float(tamanio_str)
     else:
@@ -182,8 +185,6 @@ def traslation():
             else:
                 bresenham_algotithm_high(x1, y1, x2, y2)
 
-
-
 def metodo_vacio():
     print("Hola mundo")
 
@@ -201,8 +202,6 @@ canvas.create_line(300,0,300,600,fill="black", width=1)
 canvas.create_line(0,300,600,300,fill="black", width=1)
 
 
-# Crear el lápiz (inicialmente negro)
-lapiz = canvas.create_rectangle(0, 0, 5, 5, fill="black")
 
 # Configurar eventos de dibujo en el Canvas
 canvas.bind("<Button-1>", dibujar)
