@@ -249,7 +249,7 @@ canvas.create_line(0,300,600,300,fill="black", width=1)
 
 
 # Crear el lápiz (inicialmente negro)
-lapiz = canvas.create_rectangle(0, 0, 5, 5, fill="black")
+lapiz = canvas.create_rectangle(0, 0, 0, 0, fill="black")
 
 # Configurar eventos de dibujo en el Canvas
 canvas.bind("<Button-1>", dibujar)
