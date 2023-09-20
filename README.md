@@ -9,7 +9,8 @@ Git en el que se almacenarán las prácticas de la asignatura de gráficos por c
 4. L-Systems 
 
 
-### Line algorithms **HECHA**
+### Line algorithms 
+**HECHA**
 En esta práctica se aprenderá como funcionan los algoritmos de dibujado de líneas, utilizando los 3 más importantes: **Slope Intercept, DDA y Bresenham**.
 De forma paralela, en la práctica habra que hacer de forma principal una interfaz que nos permita aprender sobre estos algoritmos, en la nuestra será un recuadro en el que dibujar y unos botones que permitan el uso de ésta, como dibujar punto, los botones de dibujar linea en funcion del algoritmo deseado, el color de los puntos y las lineas...
 
