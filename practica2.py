@@ -5,8 +5,7 @@ coordenadas = []
 # array que indica donde están las líneas
 lineas = []
 
-# Crear el lápiz (inicialmente negro)
-#lapiz = canvas.create_rectangle(0, 0, 5, 5, fill="black", width=1.0)
+
 
 
 # Función para cambiar el tamaño de los puntos en el Canvas
@@ -201,7 +200,8 @@ canvas.pack(side=tk.LEFT, padx=10, pady=10)
 canvas.create_line(300,0,300,600,fill="black", width=1)
 canvas.create_line(0,300,600,300,fill="black", width=1)
 
-
+# Crear el lápiz (inicialmente negro)
+lapiz = canvas.create_rectangle(0, 0, 0, 0, fill="black", width=1.0)
 
 # Configurar eventos de dibujo en el Canvas
 canvas.bind("<Button-1>", dibujar)
