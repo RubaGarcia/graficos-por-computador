@@ -26,32 +26,29 @@ def dibujar(event):
     coordenadas.append([x, y])
 
     print(coordenadas)
-    print(len(coordenadas))
+    print (len(coordenadas))
 
-    # Obtener el tamaño del punto como cadena
-    tamanio_str = entry_tamanio.get()
-
-    # Verificar si la cadena tiene un valor válido
-    if tamanio_str:
-        tamanio = float(tamanio_str)
+    if canvas.itemcget(lapiz,"width")=="":
+        tamanio = 2.0
     else:
-        tamanio = 1.0  # Valor predeterminado en caso de que no haya un tamaño válido
+        tamanio = float(canvas.itemcget(lapiz, "width"))
 
-    color = color_var.get()
+    color = canvas.itemcget(lapiz, "fill")
     canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
-    
     # Crear una etiqueta para mostrar las coordenadas
     coordenadas_text = tk.StringVar()
 
-    # en caso de que sea la primera vez que se impriman las coordenadas tendrá el indicador de las coordenadas
+    #en caso de que sea la primera vez que se impriman las coordenadastendra el inidcador de las coordenadas
     if len(coordenadas) < 2:
-        coords_str = "coordenadas:" + str(x - 300) + "," + str(-(y - 300))
+        coords_str= "coordenadas:" +str(x-300)+","+str(-(y-300))
     else:
-        coords_str = str(x - 300) + "," + str(-(y - 300))
+        coords_str=str(x-300)+","+str(-(y-300))
 
     coordenadas_text.set(coords_str)
     coordenadas_label = tk.Label(frame, textvariable=coordenadas_text)
     coordenadas_label.pack()
+
+
 
 
         
@@ -97,7 +94,10 @@ def bresenham_algotithm_low(x1, y1, x2, y2):
     y = y1
 
     for x in range(x1, x2):
-        tamanio = float(canvas.itemcget(lapiz, "width"))
+        if canvas.itemcget(lapiz,"width")=="": #si no se ha definido el tamaño del lapiz se le asigna un tamaño de 2.0
+            tamanio = 2.0
+        else:
+            tamanio = float(canvas.itemcget(lapiz, "width"))
         color = canvas.itemcget(lapiz, "fill")
 
         canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
@@ -122,7 +122,11 @@ def bresenham_algotithm_high(x1, y1, x2, y2):
     x = x1
 
     for y in range(y1, y2):
-        tamanio = float(canvas.itemcget(lapiz, "width"))
+        if canvas.itemcget(lapiz,"width")=="":
+            tamanio = 2.0
+        else:
+            tamanio =  float(canvas.itemcget(lapiz, "width")) 
+
         color = canvas.itemcget(lapiz, "fill")
 
         canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
@@ -134,55 +138,68 @@ def bresenham_algotithm_high(x1, y1, x2, y2):
             D = D + 2*dx
 
 
-
 def traslation():
+    #este metodo trasladará los puntos que se encuentren en el array de coordenadas en funcion de las entradas de traslacion en x y en y
+    #se debe de verificar que el array de coordenadas no este vacio
+    
+    if True:
+        print("hola")
+
+    if len(coordenadas) <= 0:
+        return -1
+    
+    #se obtienen los valores de traslacion en x y en y
+    trasl_x = int(entry_trasl_x.get())
+    trasl_y = int(entry_trasl_y.get())
+
+    #se recorre el array de coordenadas y se trasladan los puntos
+    for i in range(len(coordenadas)):
+        coordenadas[i][0] = coordenadas[i][0] + trasl_x
+        coordenadas[i][1] = coordenadas[i][1] + trasl_y
+
+    #se limpia el canvas
     canvas.delete("all")
 
-    # Ejes del canvas
-    canvas.create_line(300, 0, 300, 600, fill="black", width=1)
-    canvas.create_line(0, 300, 600, 300, fill="black", width=1)
+    #se dibujan los ejes
+    canvas.create_line(300,0,300,600,fill="black", width=1)
+    canvas.create_line(0,300,600,300,fill="black", width=1)
 
-    # Importar las coordenadas de la traslación
-    desp_x = int(entry_trasl_x.get())
-    desp_y = int(entry_trasl_y.get())
-
-    # Obtener el tamaño del punto como cadena
-    tamanio_str = canvas.itemcget(lapiz, "width")
-
-    # Verificar si la cadena tiene un valor válido o usar un valor predeterminado
-    if tamanio_str:
-        tamanio = float(tamanio_str)
-    else:
-        tamanio = 1.0  # Valor predeterminado en caso de que no haya un tamaño válido
-
-    color = canvas.itemcget(lapiz, "fill")
-
+    #se dibujan los puntos
     for i in range(len(coordenadas)):
-        punto = coordenadas[i]
-        x = punto[0]
-        y = punto[1]
-        x += desp_x
-        y += desp_y
+        x = coordenadas[i][0]
+        y = coordenadas[i][1]
+
+        if canvas.itemcget(lapiz,"width")=="":
+
+            tamanio = 2.0 
+        else:
+            tamanio = float(canvas.itemcget(lapiz, "width"))
+        color = canvas.itemcget(lapiz, "fill")
+
         canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
 
-    for j in range(len(lineas)):
-        punto1 = coordenadas[lineas[j]]
-        punto2 = coordenadas[lineas[j] - 1]
-        x1 = punto1[0]
-        x2 = punto2[0]
-        y1 = punto1[1]
-        y2 = punto2[1]
+    #se dibujan las lineas
+    for i in range(len(lineas)):
+        punto1=coordenadas[lineas[i]]
+        punto2=coordenadas[lineas[i]-1]
 
-        if abs(y2 - y1) < abs(x2 - x1):
-            if x1 > x2:
+        x1=punto1[0]
+        x2=punto2[0]
+        y1=punto1[1]
+        y2=punto2[1]
+
+        if abs(y2-y1) < abs(x2-x1):
+            if(x1>x2):
                 bresenham_algotithm_low(x2, y2, x1, y1)
             else:
                 bresenham_algotithm_low(x1, y1, x2, y2)
         else:
-            if y1 > y2:
+            if(y1>y2):
                 bresenham_algotithm_high(x2, y2, x1, y1)
             else:
                 bresenham_algotithm_high(x1, y1, x2, y2)
+
+#metodo vacio para que no marque error
 
 def metodo_vacio():
     print("Hola mundo")
