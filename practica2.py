@@ -1,4 +1,5 @@
 import tkinter as tk
+
 from practica1 import *
 
 # Variables globales
