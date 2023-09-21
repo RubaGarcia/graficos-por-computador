@@ -22,7 +22,11 @@ def dibujar(event):
     print(coordenadas)
     print (len(coordenadas))
 
-    tamanio = float(canvas.itemcget(lapiz, "width"))
+    if canvas.itemcget(lapiz,"width")=="":
+        tamanio = 2.0
+    else:
+        tamanio = float(canvas.itemcget(lapiz, "width"))
+        
     color = canvas.itemcget(lapiz, "fill")
     canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
     # Crear una etiqueta para mostrar las coordenadas
@@ -132,7 +136,11 @@ def bresenham_algotithm_low(x1, y1, x2, y2):
     y = y1
 
     while x1 < x2:
-        tamanio = float(canvas.itemcget(lapiz, "width"))
+        if canvas.itemcget(lapiz,"width")=="": #si no se ha definido el tamaño del lapiz se le asigna un tamaño de 2.0
+            tamanio = 2.0
+        else:
+            tamanio = float(canvas.itemcget(lapiz, "width"))
+
         color = canvas.itemcget(lapiz, "fill")
 
         canvas.create_rectangle(x1 - tamanio, y - tamanio, x1 + tamanio, y + tamanio, fill=color, outline=color)
@@ -160,7 +168,10 @@ def bresenham_algotithm_high(x1, y1, x2, y2):
     x = x1
 
     while y1 < y2:
-        tamanio = float(canvas.itemcget(lapiz, "width"))
+        if canvas.itemcget(lapiz,"width")=="": #si no se ha definido el tamaño del lapiz se le asigna un tamaño de 2.0
+            tamanio = 2.0
+        else:
+            tamanio = float(canvas.itemcget(lapiz, "width"))
         color = canvas.itemcget(lapiz, "fill")
 
         canvas.create_rectangle(x - tamanio, y1 - tamanio, x + tamanio, y1 + tamanio, fill=color, outline=color)

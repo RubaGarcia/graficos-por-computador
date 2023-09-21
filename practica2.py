@@ -1,6 +1,8 @@
 import tkinter as tk
 import math
 
+
+
 # Variables globales
 coordenadas = []
 coordenadas_traducidas = []
@@ -55,15 +57,9 @@ def dibujar(event):
     coordenadas_label.pack()
 
 
-
-
-        
 def dibujar_linea_bresenham():
     
         if len(coordenadas) >= 2:
-
-            lineas.append(len(coordenadas) - 1)
-
             punto1=coordenadas[len(coordenadas) - 1]
             punto2=coordenadas[len(coordenadas) - 2]
 
@@ -82,7 +78,6 @@ def dibujar_linea_bresenham():
                     bresenham_algotithm_high(x2, y2, x1, y1)
                 else:
                     bresenham_algotithm_high(x1, y1, x2, y2)
-        
             
     
 
@@ -99,20 +94,24 @@ def bresenham_algotithm_low(x1, y1, x2, y2):
     D = (2*dy) - dx
     y = y1
 
-    for x in range(x1, x2):
+    while x1 < x2:
         if canvas.itemcget(lapiz,"width")=="": #si no se ha definido el tamaño del lapiz se le asigna un tamaño de 2.0
             tamanio = 2.0
         else:
             tamanio = float(canvas.itemcget(lapiz, "width"))
+
         color = canvas.itemcget(lapiz, "fill")
 
-        canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
+        canvas.create_rectangle(x1 - tamanio, y - tamanio, x1 + tamanio, y + tamanio, fill=color, outline=color)
 
         if D > 0:
             y = y + yi
-            D = D + (2*dy) - (2*dx)
+            D = D + (2 * dy) - (2 * dx)
         else:
-            D = D + 2*dy
+            D = D + 2 * dy
+
+        x1 += tamanio  # Incrementar x1 en cada iteración para avanzar a la siguiente posición de x1
+
 
 def bresenham_algotithm_high(x1, y1, x2, y2):
     dx = x2 - x1
@@ -127,21 +126,23 @@ def bresenham_algotithm_high(x1, y1, x2, y2):
     D = (2*dx) - dy
     x = x1
 
-    for y in range(y1, y2):
-        if canvas.itemcget(lapiz,"width")=="":
+    while y1 < y2:
+        if canvas.itemcget(lapiz,"width")=="": #si no se ha definido el tamaño del lapiz se le asigna un tamaño de 2.0
             tamanio = 2.0
         else:
-            tamanio =  float(canvas.itemcget(lapiz, "width")) 
-
+            tamanio = float(canvas.itemcget(lapiz, "width"))
         color = canvas.itemcget(lapiz, "fill")
 
-        canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
+        canvas.create_rectangle(x - tamanio, y1 - tamanio, x + tamanio, y1 + tamanio, fill=color, outline=color)
 
         if D > 0:
             x = x + xi
             D = D + (2*dx) - (2*dy)
         else:
             D = D + 2*dx
+        
+        y1 += tamanio 
+
 
 def traducir_coordenadas(x, y):
     x = x - 300
