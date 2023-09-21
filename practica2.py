@@ -1,6 +1,6 @@
 import tkinter as tk
 
-from practica1 import *
+
 
 # Variables globales
 coordenadas = []
@@ -50,6 +50,92 @@ def dibujar(event):
     coordenadas_label = tk.Label(frame, textvariable=coordenadas_text)
     coordenadas_label.pack()
 
+
+def dibujar_linea_bresenham():
+    
+        if len(coordenadas) >= 2:
+            punto1=coordenadas[len(coordenadas) - 1]
+            punto2=coordenadas[len(coordenadas) - 2]
+
+            x1=punto1[0]
+            x2=punto2[0]
+            y1=punto1[1]
+            y2=punto2[1]
+
+            if abs(y2-y1) < abs(x2-x1):
+                if(x1>x2):
+                    bresenham_algotithm_low(x2, y2, x1, y1)
+                else:
+                    bresenham_algotithm_low(x1, y1, x2, y2)
+            else:
+                if(y1>y2):
+                    bresenham_algotithm_high(x2, y2, x1, y1)
+                else:
+                    bresenham_algotithm_high(x1, y1, x2, y2)
+            
+    
+
+def bresenham_algotithm_low(x1, y1, x2, y2):
+    dx = x2 - x1
+    dy = y2 - y1
+
+    yi = 1
+
+    if dy < 0:
+        yi = -1
+        dy = -dy
+
+    D = (2*dy) - dx
+    y = y1
+
+    while x1 < x2:
+        if canvas.itemcget(lapiz,"width")=="": #si no se ha definido el tamaño del lapiz se le asigna un tamaño de 2.0
+            tamanio = 2.0
+        else:
+            tamanio = float(canvas.itemcget(lapiz, "width"))
+
+        color = canvas.itemcget(lapiz, "fill")
+
+        canvas.create_rectangle(x1 - tamanio, y - tamanio, x1 + tamanio, y + tamanio, fill=color, outline=color)
+
+        if D > 0:
+            y = y + yi
+            D = D + (2 * dy) - (2 * dx)
+        else:
+            D = D + 2 * dy
+
+        x1 += tamanio  # Incrementar x1 en cada iteración para avanzar a la siguiente posición de x1
+
+
+def bresenham_algotithm_high(x1, y1, x2, y2):
+    dx = x2 - x1
+    dy = y2 - y1
+
+    xi = 1
+
+    if dx < 0:
+        xi = -1
+        dx = -dx
+
+    D = (2*dx) - dy
+    x = x1
+
+    while y1 < y2:
+        if canvas.itemcget(lapiz,"width")=="": #si no se ha definido el tamaño del lapiz se le asigna un tamaño de 2.0
+            tamanio = 2.0
+        else:
+            tamanio = float(canvas.itemcget(lapiz, "width"))
+        color = canvas.itemcget(lapiz, "fill")
+
+        canvas.create_rectangle(x - tamanio, y1 - tamanio, x + tamanio, y1 + tamanio, fill=color, outline=color)
+
+        if D > 0:
+            x = x + xi
+            D = D + (2*dx) - (2*dy)
+        else:
+            D = D + 2*dx
+        
+        y1 += tamanio 
 
 
 

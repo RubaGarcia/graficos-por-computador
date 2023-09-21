@@ -22,7 +22,11 @@ def dibujar(event):
     print(coordenadas)
     print (len(coordenadas))
 
-    tamanio = float(canvas.itemcget(lapiz, "width"))
+    if canvas.itemcget(lapiz,"width")=="":
+        tamanio = 2.0
+    else:
+        tamanio = float(canvas.itemcget(lapiz, "width"))
+        
     color = canvas.itemcget(lapiz, "fill")
     canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
     # Crear una etiqueta para mostrar las coordenadas
