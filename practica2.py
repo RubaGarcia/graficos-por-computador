@@ -1,7 +1,9 @@
 import tkinter as tk
+import math
 
 # Variables globales
 coordenadas = []
+coordenadas_traducidas = []
 # array que indica donde están las líneas
 lineas = []
 
@@ -24,9 +26,13 @@ def dibujar(event):
     x, y = event.x, event.y
     # Para dibujar las líneas
     coordenadas.append([x, y])
-
+    
     print(coordenadas)
     print (len(coordenadas))
+
+
+    # Traducir las coordenadas
+    coordenadas_traducidas.append(traducir_coordenadas(x, y))
 
     if canvas.itemcget(lapiz,"width")=="":
         tamanio = 2.0
@@ -137,11 +143,23 @@ def bresenham_algotithm_high(x1, y1, x2, y2):
         else:
             D = D + 2*dx
 
+def traducir_coordenadas(x, y):
+    x = x - 300
+    y = - (y + 300)
+
+    return [x, y]
+
+def destraduccir_coordenadas(x, y):
+    x = x + 300
+    y = y + 300
+
+    return [x, y]
+
 
 def traslation():
     #este metodo trasladará los puntos que se encuentren en el array de coordenadas en funcion de las entradas de traslacion en x y en y
     #se debe de verificar que el array de coordenadas no este vacio
-    
+   
     if True:
         print("hola")
 
@@ -154,9 +172,12 @@ def traslation():
 
     #se recorre el array de coordenadas y se trasladan los puntos
     for i in range(len(coordenadas)):
-        coordenadas[i][0] = coordenadas[i][0] + trasl_x
-        coordenadas[i][1] = coordenadas[i][1] + trasl_y
+        coordenadas_traducidas[i][0] = coordenadas_traducidas[i][0] + trasl_x
+        coordenadas_traducidas[i][1] = coordenadas_traducidas[i][1] + trasl_y
 
+    for i in range(len(coordenadas)):
+        coordenadas[i] = destraduccir_coordenadas(coordenadas_traducidas[i][0], coordenadas_traducidas[i][1])
+    
     #se limpia el canvas
     canvas.delete("all")
 
@@ -203,6 +224,136 @@ def traslation():
 
 def metodo_vacio():
     print("Hola mundo")
+
+def rotacion():
+    #funcion que toma los puntos del array de coordenadas y los rota en funcion de la entrada de rotacion.
+    #se rotan los elementos en funcion del centro del canvas
+    #se debe de verificar que el array de coordenadas no este vacio
+    if len(coordenadas) <= 0:
+        return -1
+    
+    #se obtiene el valor de rotacion
+    rot_alfa = int(entry_rot_alfa.get())
+
+    #se recorre el array de coordenadas y se rota cada punto
+    for i in range(len(coordenadas)):
+        x = coordenadas[i][0]
+        y = coordenadas[i][1]
+
+        coordenadas_traducidas[i][0] = (x * math.cos(rot_alfa)) - (y * math.sin(rot_alfa))
+        coordenadas_traducidas[i][1] = (x * math.sin(rot_alfa)) + (y * math.cos(rot_alfa))
+
+    for i in range(len(coordenadas)):
+        coordenadas[i] = destraduccir_coordenadas(coordenadas_traducidas[i][0], coordenadas_traducidas[i][1])
+
+    #se limpia el canvas
+    canvas.delete("all")
+
+    #se dibujan los ejes
+    canvas.create_line(300,0,300,600,fill="black", width=1)
+    canvas.create_line(0,300,600,300,fill="black", width=1)
+
+    #se dibujan los puntos
+    for i in range(len(coordenadas)):
+        x = coordenadas[i][0]
+        y = coordenadas[i][1]
+
+        if canvas.itemcget(lapiz,"width")=="":
+
+            tamanio = 2.0 
+        else:
+            tamanio = float(canvas.itemcget(lapiz, "width"))
+        color = canvas.itemcget(lapiz, "fill")
+
+        canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
+
+    #se dibujan las lineas
+    for i in range(len(lineas)):
+        punto1=coordenadas[lineas[i]]
+        punto2=coordenadas[lineas[i]-1]
+
+        x1=punto1[0]
+        x2=punto2[0]
+        y1=punto1[1]
+        y2=punto2[1]
+
+        if abs(y2-y1) < abs(x2-x1):
+            if(x1>x2):
+                bresenham_algotithm_low(x2, y2, x1, y1)
+            else:
+                bresenham_algotithm_low(x1, y1, x2, y2)
+        else:
+            if(y1>y2):
+                bresenham_algotithm_high(x2, y2, x1, y1)
+            else:
+                bresenham_algotithm_high(x1, y1, x2, y2)
+
+
+
+def escalado():
+    #funcion que toma los puntos del array de coordenadas y los escala en funcion de las entradas de escalado en x y en y.
+    #se debe de verificar que el array de coordenadas no este vacio
+    if len(coordenadas) <= 0:
+        return -1
+    
+    #se obtienen los valores de escalado en x y en y
+    esc_x = int(entry_esc_x.get())
+    esc_y = int(entry_esc_y.get())
+    
+    #se recorre el array de coordenadas y se escala cada punto
+    for i in range(len(coordenadas)):
+        x = coordenadas[i][0]
+        y = coordenadas[i][1]
+
+        coordenadas_traducidas[i][0] = x * esc_x
+        coordenadas_traducidas[i][1] = y * esc_y
+
+    for i in range(len(coordenadas)):
+        coordenadas[i] = destraduccir_coordenadas(coordenadas_traducidas[i][0], coordenadas_traducidas[i][1])
+
+    #se limpia el canvas
+    canvas.delete("all")
+
+    #se dibujan los ejes
+    canvas.create_line(300,0,300,600,fill="black", width=1)
+    canvas.create_line(0,300,600,300,fill="black", width=1)
+
+    #se dibujan los puntos
+    for i in range(len(coordenadas)):
+        x = coordenadas[i][0]
+        y = coordenadas[i][1]
+
+        if canvas.itemcget(lapiz,"width")=="":
+
+            tamanio = 2.0 
+        else:
+            tamanio = float(canvas.itemcget(lapiz, "width"))
+        color = canvas.itemcget(lapiz, "fill")
+
+        canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
+
+    #se dibujan las lineas
+    for i in range(len(lineas)):
+        punto1=coordenadas[lineas[i]]
+        punto2=coordenadas[lineas[i]-1]
+
+        x1=punto1[0]
+        x2=punto2[0]
+        y1=punto1[1]
+        y2=punto2[1]
+
+        if abs(y2-y1) < abs(x2-x1):
+            if(x1>x2):
+                bresenham_algotithm_low(x2, y2, x1, y1)
+            else:
+                bresenham_algotithm_low(x1, y1, x2, y2)
+        else:
+            if(y1>y2):
+                bresenham_algotithm_high(x2, y2, x1, y1)
+            else:
+                bresenham_algotithm_high(x1, y1, x2, y2)
+
+                
 
 
 # Crear la ventana principal
