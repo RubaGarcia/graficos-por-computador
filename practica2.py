@@ -180,7 +180,7 @@ def traslation():
         coordenadas[i] = destraduccir_coordenadas(coordenadas_traducidas[i][0], coordenadas_traducidas[i][1])
     
     #se limpia el canvas
-    canvas.delete("all")
+    flush_canvas()
 
     #se dibujan los ejes
     canvas.create_line(300,0,300,600,fill="black", width=1)
@@ -248,7 +248,7 @@ def rotacion():
         coordenadas[i] = destraduccir_coordenadas(coordenadas_traducidas[i][0], coordenadas_traducidas[i][1])
 
     #se limpia el canvas
-    canvas.delete("all")
+    flush_canvas()
 
     #se dibujan los ejes
     canvas.create_line(300,0,300,600,fill="black", width=1)
@@ -313,7 +313,7 @@ def escalado():
         coordenadas[i] = destraduccir_coordenadas(coordenadas_traducidas[i][0], coordenadas_traducidas[i][1])
 
     #se limpia el canvas
-    canvas.delete("all")
+    flush_canvas()
 
     #se dibujan los ejes
     canvas.create_line(300,0,300,600,fill="black", width=1)
@@ -354,7 +354,11 @@ def escalado():
             else:
                 bresenham_algotithm_high(x1, y1, x2, y2)
 
-                
+def flush_canvas():
+    canvas.create_rectangle(0, 0, 600, 600, fill="white", outline="white")
+    canvas.create_line(300,0,300,600,fill="black", width=1)
+    canvas.create_line(0,300,600,300,fill="black", width=1)
+
 
 
 # Crear la ventana principal
