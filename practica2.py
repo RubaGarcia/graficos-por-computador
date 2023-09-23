@@ -5,6 +5,7 @@ import math
 
 # Variables globales
 coordenadas = []
+tamanhos_coords=[]
 coordenadas_traducidas = []
 # array que indica donde están las líneas
 lineas = []
@@ -40,6 +41,8 @@ def dibujar(event):
         tamanio = 2.0
     else:
         tamanio = float(canvas.itemcget(lapiz, "width"))
+
+    tamanhos_coords.append(tamanio)
 
     color = canvas.itemcget(lapiz, "fill")
     canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
@@ -182,23 +185,23 @@ def traslation():
     #se limpia el canvas
     flush_canvas()
 
-    #se dibujan los ejes
-    canvas.create_line(300,0,300,600,fill="black", width=1)
-    canvas.create_line(0,300,600,300,fill="black", width=1)
+
+
 
     #se dibujan los puntos
     for i in range(len(coordenadas)):
+
+        print("BIM BIM BAM BAM")
+
         x = coordenadas[i][0]
         y = coordenadas[i][1]
 
-        if canvas.itemcget(lapiz,"width")=="":
+        
 
-            tamanio = 2.0 
-        else:
-            tamanio = float(canvas.itemcget(lapiz, "width"))
         color = canvas.itemcget(lapiz, "fill")
 
-        canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
+        canvas.create_rectangle(x - tamanhos_coords[i], y - tamanhos_coords[i],
+                                 x + tamanhos_coords[i], y + tamanhos_coords[i], fill=color, outline=color)
 
     #se dibujan las lineas
     for i in range(len(lineas)):
@@ -250,9 +253,7 @@ def rotacion():
     #se limpia el canvas
     flush_canvas()
 
-    #se dibujan los ejes
-    canvas.create_line(300,0,300,600,fill="black", width=1)
-    canvas.create_line(0,300,600,300,fill="black", width=1)
+    
 
     #se dibujan los puntos
     for i in range(len(coordenadas)):
@@ -315,9 +316,7 @@ def escalado():
     #se limpia el canvas
     flush_canvas()
 
-    #se dibujan los ejes
-    canvas.create_line(300,0,300,600,fill="black", width=1)
-    canvas.create_line(0,300,600,300,fill="black", width=1)
+    
 
     #se dibujan los puntos
     for i in range(len(coordenadas)):
@@ -425,7 +424,7 @@ entry_trasl_y = tk.Entry(frame)
 entry_trasl_y.pack()
 
 #Rotacion
-btn_rot = tk.Button(frame, text="Rotación", command=metodo_vacio)
+btn_rot = tk.Button(frame, text="Rotación", command=rotacion)
 btn_rot.pack()
 
 label_rot_alfa= tk.Label(frame, text="alfa:")
@@ -435,7 +434,7 @@ entry_rot_alfa.pack()
 
 
 #Escalado
-btn_esc = tk.Button(frame, text="Escalado", command=metodo_vacio)
+btn_esc = tk.Button(frame, text="Escalado", command=escalado)
 btn_esc.pack()
 
 label_esc_x = tk.Label(frame, text="Traslación en x")
