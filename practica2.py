@@ -69,6 +69,9 @@ def dibujar(event):
 def dibujar_linea_bresenham():
     
         if len(coordenadas) >= 2:
+
+            lineas.append(len(coordenadas) - 1)
+
             punto1=coordenadas[len(coordenadas) - 1]
             punto2=coordenadas[len(coordenadas) - 2]
 
@@ -173,7 +176,7 @@ def traslation():
     #se debe de verificar que el array de coordenadas no este vacio
    
     if True:
-        print("hola")
+        print("traslation algorithm")
 
     if len(coordenadas) <= 0:
         return -1
@@ -199,7 +202,7 @@ def traslation():
     #se dibujan los puntos
     for i in range(len(coordenadas)):
 
-        print("BIM BIM BAM BAM")
+        
 
         x = coordenadas[i][0]
         y = coordenadas[i][1]
