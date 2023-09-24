@@ -35,7 +35,7 @@ def dibujar(event):
 
 
     # Traducir las coordenadas
-    coordenadas_traducidas.append(traducir_coordenadas(x, y))
+    #coordenadas_traducidas.append(traducir_coordenadas(x, y))
 
     if canvas.itemcget(lapiz,"width")=="":
         tamanio = 2.0
@@ -51,8 +51,14 @@ def dibujar(event):
 
     #en caso de que sea la primera vez que se impriman las coordenadastendra el inidcador de las coordenadas
     if len(coordenadas) < 2:
-        coords_str= "coordenadas:" +str(x-300)+","+str(-(y-300))
+        aux_x=x-300
+        aux_y=-(y-300)
+        coordenadas_traducidas.append([aux_x,aux_y])
+        coords_str= "coordenadas:" +str(aux_x)+","+str(aux_y)
     else:
+        aux_x=x-300
+        aux_y=-(y-300)
+        coordenadas_traducidas.append([aux_x,aux_y])
         coords_str=str(x-300)+","+str(-(y-300))
 
     coordenadas_text.set(coords_str)
@@ -149,13 +155,15 @@ def bresenham_algotithm_high(x1, y1, x2, y2):
 
 def traducir_coordenadas(x, y):
     x = x - 300
-    y = - (y + 300)
+    y = (- y - 300)
 
     return [x, y]
 
+
 def destraduccir_coordenadas(x, y):
+    #pasar los ejes a coordenadas positivas de forma que entren en el canvas
     x = x + 300
-    y = y + 300
+    y = - y + 300
 
     return [x, y]
 
@@ -224,8 +232,8 @@ def traslation():
             else:
                 bresenham_algotithm_high(x1, y1, x2, y2)
 
-#metodo vacio para que no marque error
 
+#metodo vacio para que no marque error
 def metodo_vacio():
     print("Hola mundo")
 
