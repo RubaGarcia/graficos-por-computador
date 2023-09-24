@@ -249,14 +249,16 @@ def rotacion():
     
     #se obtiene el valor de rotacion
     rot_alfa = int(entry_rot_alfa.get())
-
+    alfa_radianes = math.radians(rot_alfa)
     #se recorre el array de coordenadas y se rota cada punto
+    
     for i in range(len(coordenadas)):
+
         x = coordenadas[i][0]
         y = coordenadas[i][1]
 
-        coordenadas_traducidas[i][0] = (x * math.cos(rot_alfa)) - (y * math.sin(rot_alfa))
-        coordenadas_traducidas[i][1] = (x * math.sin(rot_alfa)) + (y * math.cos(rot_alfa))
+        coordenadas_traducidas[i][0] = (x * math.cos(alfa_radianes)) - (y * math.sin(alfa_radianes))
+        coordenadas_traducidas[i][1] = (x * math.sin(alfa_radianes)) + (y * math.cos(alfa_radianes))
 
     for i in range(len(coordenadas)):
         coordenadas[i] = destraduccir_coordenadas(coordenadas_traducidas[i][0], coordenadas_traducidas[i][1])
