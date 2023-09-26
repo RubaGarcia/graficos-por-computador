@@ -266,18 +266,7 @@ def rotacion():
 
         coordenadas[i] = destraduccir_coordenadas(x,y)
 
-        #TODO arreglar donde rota, no rota en el centro del canvas. Rota en funcion de la es1quina superior izquierda del canvas
-
-
-    #se traducen las coordenadas
-
-
-
-    '''
-    for i in range(len(coordenadas)):
-        #TODO traduce mal las coordenadas
-        coordenadas[i] = destraduccir_coordenadas(coordenadas_traducidas[i][0], coordenadas_traducidas[i][1])
-    '''      
+    
 
     #se limpia el canvas
     flush_canvas()
