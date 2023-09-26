@@ -204,18 +204,18 @@ def dibujar_linea_slope_intercept():
 
         if abs(y2-y1) < abs(x2-x1):
             if(x1>x2):
-                slope_intercept_algorithm_low(x2, y2, x1, y1, m, b)
+                slope_intercept_algorithm_low(x2, x1,  m, b)
             else:
-                slope_intercept_algorithm_low(x1, y1, x2, y2, m, b)
+                slope_intercept_algorithm_low(x1, x2,  m, b)
         else:
             if(y1>y2):
-                slope_intercept_algorithm_high(x2, y2, x1, y1, m, b)
+                slope_intercept_algorithm_high(y2, y1, m, b)
             else:
-                slope_intercept_algorithm_high(x1, y1, x2, y2, m, b)
+                slope_intercept_algorithm_high(y1, y2, m, b)
 
     
 
-def slope_intercept_algorithm_low(x1, y1, x2, y2, m, b):
+def slope_intercept_algorithm_low(x1, x2, m, b):
     x = x1
     while x < x2:
         y = m * x + b
@@ -226,7 +226,7 @@ def slope_intercept_algorithm_low(x1, y1, x2, y2, m, b):
 
         x += tamanio  # Incrementar x en cada iteración del bucle while
 
-def slope_intercept_algorithm_high(x1, y1, x2, y2, m, b):
+def slope_intercept_algorithm_high( y1, y2, m, b):
     y = y1
     while y < y2:
         x = (y - b) / m
