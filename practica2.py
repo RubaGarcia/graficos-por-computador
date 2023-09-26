@@ -258,8 +258,21 @@ def rotacion():
         x = coordenadas[i][0]
         y = coordenadas[i][1]
 
-        coordenadas[i][0] = int( (x * math.cos(alfa_radianes)) - (y * math.sin(alfa_radianes)))
-        coordenadas[i][1] = int( (x * math.sin(alfa_radianes)) + (y * math.cos(alfa_radianes)))
+        x=x-300
+        y=-(y-300)
+
+        x = int( (x * math.cos(alfa_radianes)) - (y * math.sin(alfa_radianes)))
+        y = int( (x * math.sin(alfa_radianes)) + (y * math.cos(alfa_radianes)))
+
+        coordenadas[i] = destraduccir_coordenadas(x,y)
+
+        #TODO arreglar donde rota, no rota en el centro del canvas. Rota en funcion de la es1quina superior izquierda del canvas
+
+
+    #se traducen las coordenadas
+
+
+
     '''
     for i in range(len(coordenadas)):
         #TODO traduce mal las coordenadas
