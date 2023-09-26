@@ -175,10 +175,11 @@ def traslation():
     #este metodo trasladará los puntos que se encuentren en el array de coordenadas en funcion de las entradas de traslacion en x y en y
     #se debe de verificar que el array de coordenadas no este vacio
    
-    if True:
-        print("traslation algorithm")
+    
+    print("traslation algorithm")
 
     if len(coordenadas) <= 0:
+        print("no hay coordenadas")
         return -1
     
     #se obtienen los valores de traslacion en x y en y
@@ -245,7 +246,12 @@ def rotacion():
     #se rotan los elementos en funcion del centro del canvas
     #se debe de verificar que el array de coordenadas no este vacio
 
+    print("rotation algorithm")
+
+
     if len(coordenadas) <= 0:
+        
+        print("no hay coordenadas")
         return -1
     
     #se obtiene el valor de rotacion
