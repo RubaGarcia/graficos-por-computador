@@ -258,13 +258,13 @@ def rotacion():
         x = coordenadas[i][0]
         y = coordenadas[i][1]
 
-        coordenadas_traducidas[i][0] = int( (x * math.cos(alfa_radianes)) - (y * math.sin(alfa_radianes)))
-        coordenadas_traducidas[i][1] = int( (x * math.sin(alfa_radianes)) + (y * math.cos(alfa_radianes)))
-
+        coordenadas[i][0] = int( (x * math.cos(alfa_radianes)) - (y * math.sin(alfa_radianes)))
+        coordenadas[i][1] = int( (x * math.sin(alfa_radianes)) + (y * math.cos(alfa_radianes)))
+    '''
     for i in range(len(coordenadas)):
         #TODO traduce mal las coordenadas
         coordenadas[i] = destraduccir_coordenadas(coordenadas_traducidas[i][0], coordenadas_traducidas[i][1])
-        
+    '''      
 
     #se limpia el canvas
     flush_canvas()
