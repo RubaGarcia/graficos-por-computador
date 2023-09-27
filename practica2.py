@@ -245,8 +245,11 @@ def rotacion():
     #funcion que toma los puntos del array de coordenadas y los rota en funcion de la entrada de rotacion.
     #se rotan los elementos en funcion del centro del canvas
     #se debe de verificar que el array de coordenadas no este vacio
+    
 
-    print("rotation algorithm")
+    #TODO arreglar bug de que los puntos se acerquen al centro del canvas
+
+    #print("rotation algorithm")
 
 
     if len(coordenadas) <= 0:
@@ -256,6 +259,7 @@ def rotacion():
     
     #se obtiene el valor de rotacion
     rot_alfa = int(entry_rot_alfa.get())
+    
     alfa_radianes = math.radians(rot_alfa)
     #se recorre el array de coordenadas y se rota cada punto
     
@@ -264,11 +268,12 @@ def rotacion():
         x = coordenadas[i][0]
         y = coordenadas[i][1]
 
+
         x=x-300
         y=-(y-300)
 
-        x = int( (x * math.cos(alfa_radianes)) - (y * math.sin(alfa_radianes)))
-        y = int( (x * math.sin(alfa_radianes)) + (y * math.cos(alfa_radianes)))
+        x = round( (x * math.cos(alfa_radianes)) - (y * math.sin(alfa_radianes)), 0)
+        y = round( (x * math.sin(alfa_radianes)) + (y * math.cos(alfa_radianes)), 0)
 
         coordenadas[i] = destraduccir_coordenadas(x,y)
 
@@ -302,6 +307,11 @@ def rotacion():
         x2=punto2[0]
         y1=punto1[1]
         y2=punto2[1]
+
+
+        dist=math.sqrt((x2-x1)**2+(y2-y1)**2)
+
+        print ("rot = ",rot_alfa,"dist = " ,dist)
 
         if abs(y2-y1) < abs(x2-x1):
             if(x1>x2):
