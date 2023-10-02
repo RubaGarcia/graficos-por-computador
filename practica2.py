@@ -333,8 +333,8 @@ def escalado():
         return -1
     
     #se obtienen los valores de escalado en x y en y
-    esc_x = int(entry_esc_x.get())
-    esc_y = int(entry_esc_y.get())
+    esc_x = float(entry_esc_x.get())
+    esc_y = float(entry_esc_y.get())
     
     #se recorre el array de coordenadas y se escala cada punto
     for i in range(len(coordenadas)):
@@ -444,8 +444,7 @@ btn_bresenham.pack()
 #botones con funciones de traslaciones
 
 #Traslacion
-btn_trasl = tk.Button(frame, text="Traslación", command=traslation)
-btn_trasl.pack()
+
 
 label_trasl_x = tk.Label(frame, text="Traslación en x")
 label_trasl_x.pack()
@@ -457,9 +456,10 @@ label_trasl_y.pack()
 entry_trasl_y = tk.Entry(frame)
 entry_trasl_y.pack()
 
+btn_trasl = tk.Button(frame, text="Traslación", command=traslation)
+btn_trasl.pack()
+
 #Rotacion
-btn_rot = tk.Button(frame, text="Rotación", command=rotacion)
-btn_rot.pack()
 
 label_rot_alfa= tk.Label(frame, text="alfa:")
 label_rot_alfa.pack()
@@ -467,19 +467,25 @@ entry_rot_alfa = tk.Entry(frame)
 entry_rot_alfa.pack()
 
 
-#Escalado
-btn_esc = tk.Button(frame, text="Escalado", command=escalado)
-btn_esc.pack()
+btn_rot = tk.Button(frame, text="Rotación", command=rotacion)
+btn_rot.pack()
 
-label_esc_x = tk.Label(frame, text="Traslación en x")
+
+#Escalado
+label_esc_x = tk.Label(frame, text="Escalado en x")
 label_esc_x.pack()
 entry_esc_x = tk.Entry(frame)
 entry_esc_x.pack()
 
-label_esc_y = tk.Label(frame, text="Traslación en y")
+label_esc_y = tk.Label(frame, text="Escalado en y")
 label_esc_y.pack()
 entry_esc_y = tk.Entry(frame)
 entry_esc_y.pack()
+
+
+btn_esc = tk.Button(frame, text="Escalado", command=escalado)
+btn_esc.pack()
+
 
 
 # Ejecutar la aplicación
