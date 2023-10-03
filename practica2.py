@@ -1,6 +1,6 @@
 import tkinter as tk
 import math
-
+import random
 
 
 # Variables globales
@@ -185,7 +185,7 @@ def traslation():
     #se obtienen los valores de traslacion en x y en y
     trasl_x = int(entry_trasl_x.get())
     trasl_y = int(entry_trasl_y.get())
-
+    '''
     #se recorre el array de coordenadas y se trasladan los puntos
     for i in range(len(coordenadas)):
         coordenadas_traducidas[i][0] = coordenadas_traducidas[i][0] + trasl_x
@@ -193,7 +193,20 @@ def traslation():
 
     for i in range(len(coordenadas)):
         coordenadas[i] = destraduccir_coordenadas(coordenadas_traducidas[i][0], coordenadas_traducidas[i][1])
-    
+    '''
+    for i in range(len(coordenadas)):
+
+        x = coordenadas[i][0]
+        y = coordenadas[i][1]
+
+
+        x=x-300
+        y=-(y-300)
+
+        x = x + trasl_x
+        y = y + trasl_y
+
+        coordenadas[i] = destraduccir_coordenadas(x,y)    
     #se limpia el canvas
     flush_canvas()
 
@@ -392,8 +405,105 @@ def flush_canvas():
     canvas.create_line(300,0,300,600,fill="black", width=1)
     canvas.create_line(0,300,600,300,fill="black", width=1)
 
+def rotate(grados):
+    
+    #funcion que toma los puntos del array de coordenadas y los rota en funcion de la entrada de rotacion.
+    #se rotan los elementos en funcion del centro del canvas
+    #se debe de verificar que el array de coordenadas no este vacio
+    
+
+    #TODO arreglar bug de que los puntos se acerquen al centro del canvas
+
+    #print("rotation algorithm")
 
 
+    if len(coordenadas) <= 0:
+        
+        print("no hay coordenadas")
+        return -1
+    
+    #se obtiene el valor de rotacion
+    rot_alfa = grados
+    
+    alfa_radianes = math.radians(rot_alfa)
+    #se recorre el array de coordenadas y se rota cada punto
+    
+    for i in range(len(coordenadas)):
+
+        x = coordenadas[i][0]
+        y = coordenadas[i][1]
+
+
+        x=x-300
+        y=-(y-300)
+
+        x = round( (x * math.cos(alfa_radianes)) - (y * math.sin(alfa_radianes)), 0)
+        y = round( (x * math.sin(alfa_radianes)) + (y * math.cos(alfa_radianes)), 0)
+
+        coordenadas[i] = destraduccir_coordenadas(x,y)
+
+    
+
+    #se limpia el canvas
+    flush_canvas()
+
+    
+
+    #se dibujan los puntos
+    for i in range(len(coordenadas)):
+        x = coordenadas[i][0]
+        y = coordenadas[i][1]
+
+        if canvas.itemcget(lapiz,"width")=="":
+
+            tamanio = 2.0 
+        else:
+            tamanio = float(canvas.itemcget(lapiz, "width"))
+        color = canvas.itemcget(lapiz, "fill")
+
+        canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
+
+    #se dibujan las lineas
+    for i in range(len(lineas)):
+        punto1=coordenadas[lineas[i]]
+        punto2=coordenadas[lineas[i]-1]
+
+        x1=punto1[0]
+        x2=punto2[0]
+        y1=punto1[1]
+        y2=punto2[1]
+
+
+        dist=math.sqrt((x2-x1)**2+(y2-y1)**2)
+
+        print ("rot = ",rot_alfa,"dist = " ,dist)
+
+        if abs(y2-y1) < abs(x2-x1):
+            if(x1>x2):
+                bresenham_algotithm_low(x2, y2, x1, y1)
+            else:
+                bresenham_algotithm_low(x1, y1, x2, y2)
+        else:
+            if(y1>y2):
+                bresenham_algotithm_high(x2, y2, x1, y1)
+            else:
+                bresenham_algotithm_high(x1, y1, x2, y2)
+
+
+def rot_animation():
+        rot_alfa = int(entry_rot_alfa.get())
+        for i in range(rot_alfa):
+            rotate(1)
+
+def movidas():
+
+    for i in range (300):
+        coordenadas.append([random.randint(0,600),random.randint(0,600)])
+        tamanhos_coords.append(random.randint(1,5))
+    print ("buenas tardes")
+    for i in range (20):
+        print("hola")
+        rotate(30)
 # Crear la ventana principal
 root = tk.Tk()
 root.title("Aplicación de Dibujo")
@@ -469,6 +579,8 @@ entry_rot_alfa.pack()
 
 btn_rot = tk.Button(frame, text="Rotación", command=rotacion)
 btn_rot.pack()
+btn_rot_animation = tk.Button(frame, text="Rotación animada", command=rot_animation)
+btn_rot_animation.pack()
 
 
 #Escalado
@@ -486,7 +598,10 @@ entry_esc_y.pack()
 btn_esc = tk.Button(frame, text="Escalado", command=escalado)
 btn_esc.pack()
 
+btn_random = tk.Button(frame, text="Random", command=movidas)
+btn_random.pack()
 
 
 # Ejecutar la aplicación
 root.mainloop()
+
