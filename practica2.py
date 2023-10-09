@@ -454,9 +454,11 @@ def movidas():
         coordenadas.append([random.randint(0,600),random.randint(0,600)])
         tamanhos_coords.append(random.randint(1,5))
     print ("buenas tardes")
+    '''
     for i in range (20):
         print("hola")
-        rotate(30)
+        rotate(30)'''
+    
 # Crear la ventana principal
 root = tk.Tk()
 root.title("Aplicación de Dibujo")
