@@ -115,17 +115,7 @@ def dibujar_linea_bresenham():
                 tamanio = float(canvas.itemcget(lapiz, "width"))
 
             bresenham_algorithm(x1, y1, x2, y2, tamanio)
-            '''
-            if abs(y2-y1) < abs(x2-x1):
-                if(x1>x2):
-                    bresenham_algotithm_low(x2, y2, x1, y1)
-                else:
-                    bresenham_algotithm_low(x1, y1, x2, y2)
-            else:
-                if(y1>y2):
-                    bresenham_algotithm_high(x2, y2, x1, y1)
-                else:
-                    bresenham_algotithm_high(x1, y1, x2, y2)'''
+            
 
 
 def bresenham_algorithm(x1, y1, x2, y2, size):
