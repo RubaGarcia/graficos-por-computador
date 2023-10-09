@@ -368,6 +368,7 @@ def rotate(grados):
     
 
     #TODO arreglar bug de que los puntos se acerquen al centro del canvas
+    #TODO se supone que igual con calculo matricial se puede arreglar pero no tengo mucha fe
 
     #print("rotation algorithm")
 
