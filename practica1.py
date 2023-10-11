@@ -3,6 +3,8 @@ import tkinter as tk
 # Variables globales
 coordenadas = []
 
+TAM_PIXEL=3
+
 # Función para cambiar el tamaño de los puntos en el Canvas
 def cambiar_tamanio_punto():
     nuevo_tamanio = float(entry_tamanio.get())
@@ -17,18 +19,22 @@ def cambiar_color_punto():
 def dibujar(event):
     x, y = event.x, event.y
     # Para dibujar las líneas
+
+    x, y = pseudopuntos(x,y)
+
     coordenadas.append([x, y])
 
     print(coordenadas)
     print (len(coordenadas))
 
     if canvas.itemcget(lapiz,"width")=="":
-        tamanio = 2.0
+        tamanio = TAM_PIXEL
     else:
-        tamanio = float(canvas.itemcget(lapiz, "width"))
+        tamanio = float(canvas.itemcget(lapiz, "width")) * TAM_PIXEL
         
     color = canvas.itemcget(lapiz, "fill")
-    canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
+    realx,realy=undo_pseudopuntos(x,y)
+    canvas.create_rectangle(realx - tamanio, realy - tamanio, realx + tamanio, realy + tamanio, fill=color, outline=color)
     # Crear una etiqueta para mostrar las coordenadas
     coordenadas_text = tk.StringVar()
 
@@ -42,6 +48,16 @@ def dibujar(event):
     coordenadas_label = tk.Label(frame, textvariable=coordenadas_text)
     coordenadas_label.pack()
 
+
+def pseudopuntos(x,y):
+    x = (x - (CANVAS_WIDTH // 2)) // TAM_PIXEL
+    y = (y - (CANVAS_WIDTH // 2)) // TAM_PIXEL
+    return x,y
+
+def undo_pseudopuntos(x,y):
+    x = (x * TAM_PIXEL) + (CANVAS_WIDTH // 2)
+    y = (y * TAM_PIXEL) + (CANVAS_WIDTH // 2)
+    return x,y
 
 def dibujar_punto_linea(x1,y1, x2, y2):
     tamanio = float(canvas.itemcget(lapiz, "width"))
@@ -150,6 +166,13 @@ def bresenham_algorithm(x1, y1, x2, y2, size):
 
     canvas.create_rectangle(x1 - size, y1 - size, x1 + size, y1 + size, fill=color, outline=color)
 
+def flush_canvas():
+
+    coordenadas = []
+    canvas.create_rectangle(0, 0, 600, 600, fill="white", outline="white")
+    canvas.create_line(300,0,300,600,fill="black", width=1)
+    canvas.create_line(0,300,600,300,fill="black", width=1)
+    
 
 
 
@@ -187,7 +210,7 @@ def slope_intercept_algorithm_low(x1, x2, m, b):
     x = x1
     while x < x2:
         y = m * x + b
-        tamanio = float(canvas.itemcget(lapiz, "width"))
+        tamanio = float(canvas.itemcget(lapiz, "width")) * TAM_PIXEL
         color = canvas.itemcget(lapiz, "fill")
 
         canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
@@ -198,7 +221,7 @@ def slope_intercept_algorithm_high( y1, y2, m, b):
     y = y1
     while y < y2:
         x = (y - b) / m
-        tamanio = float(canvas.itemcget(lapiz, "width"))
+        tamanio = float(canvas.itemcget(lapiz, "width")) * TAM_PIXEL
         color = canvas.itemcget(lapiz, "fill")
 
         canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
@@ -273,6 +296,9 @@ btn_bresenham = tk.Button(frame, text="Bresenham", command=dibujar_linea_bresenh
 btn_bresenham.pack()
 # Ejecutar la aplicación
 
+
+btn_flush = tk.Button(frame, text="Flush", command=flush_canvas)
+btn_flush.pack()
 
 
 root.mainloop()
