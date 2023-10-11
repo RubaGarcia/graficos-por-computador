@@ -86,6 +86,8 @@ def dibujar_linea_DDA():
         punto1=coordenadas[len(coordenadas) - 1]
         punto2=coordenadas[len(coordenadas) - 2]
 
+        punto1,punto2=undo_pseudopuntos(punto1[0], punto1[1]),undo_pseudopuntos(punto2[0], punto2[1])
+
         DDA_algorithm(punto1[0], punto1[1],punto2[0], punto2[1])
 
 
@@ -103,12 +105,15 @@ def DDA_algorithm(x1, y1, x2, y2):
     x=float(x1)
     y=float(y1)
 
-    
+    if canvas.itemcget(lapiz,"width")=="":
+        tamanio = TAM_PIXEL
+    else:
+        tamanio = float(canvas.itemcget(lapiz, "width")) * TAM_PIXEL
+
+    color = canvas.itemcget(lapiz, "fill")
 
     for i in range(steps):
-        tamanio = float(canvas.itemcget(lapiz, "width"))
-        color = canvas.itemcget(lapiz, "fill")
-
+        
         canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
 
         x -= xinc
@@ -125,10 +130,13 @@ def dibujar_linea_bresenham():
             y1=punto1[1]
             y2=punto2[1]
 
-            if canvas.itemcget(lapiz,"width")=="": #si no se ha definido el tamaño del lapiz se le asigna un tamaño de 2.0
-                tamanio = 2.0
+            if canvas.itemcget(lapiz,"width")=="":
+                tamanio = TAM_PIXEL
             else:
-                tamanio = float(canvas.itemcget(lapiz, "width"))
+                tamanio = float(canvas.itemcget(lapiz, "width")) * TAM_PIXEL
+
+            x1,y1=undo_pseudopuntos(x1,y1)
+            x2,y2=undo_pseudopuntos(x2,y2)            
 
             bresenham_algorithm(x1, y1, x2, y2, tamanio)
             
