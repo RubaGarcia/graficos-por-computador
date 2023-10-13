@@ -62,6 +62,7 @@ def undo_pseudopuntos(x,y):
 def dibujar_punto_linea(x1,y1, x2, y2):
     tamanio = float(canvas.itemcget(lapiz, "width"))
     color = canvas.itemcget(lapiz, "fill")
+    
     canvas.create_rectangle(x1 - tamanio, y1 - tamanio, x1 + tamanio, y1 + tamanio, fill=color, outline=color)
     canvas.create_rectangle(x2 - tamanio, y2 - tamanio, x2 + tamanio, y2 + tamanio, fill=color, outline=color)
     canvas.create_line(x1, y1, x2, y2, fill=color, width=tamanio)
