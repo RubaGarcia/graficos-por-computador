@@ -1,4 +1,5 @@
 import tkinter as tk
+import math
 
 # Variables globales
 coordenadas = []
@@ -87,7 +88,7 @@ def dibujar_linea_DDA():
         punto1=coordenadas[len(coordenadas) - 1]
         punto2=coordenadas[len(coordenadas) - 2]
 
-        punto1,punto2=undo_pseudopuntos(punto1[0], punto1[1]),undo_pseudopuntos(punto2[0], punto2[1])
+        #punto1,punto2=undo_pseudopuntos(punto1[0], punto1[1]),undo_pseudopuntos(punto2[0], punto2[1])
 
         DDA_algorithm(punto1[0], punto1[1],punto2[0], punto2[1])
 
@@ -98,13 +99,13 @@ def DDA_algorithm(x1, y1, x2, y2):
     dy=y1-y2
 
 
-    steps=max(dx, dy)
+    steps=max(abs(dx), abs(dy))
 
     xinc=dx/steps
     yinc=dy/steps
 
-    x=float(x1)
-    y=float(y1)
+    x=x1+0.5
+    y=y1+0.5
 
     if canvas.itemcget(lapiz,"width")=="":
         tamanio = TAM_PIXEL
@@ -113,13 +114,17 @@ def DDA_algorithm(x1, y1, x2, y2):
 
     color = canvas.itemcget(lapiz, "fill")
 
-    for i in range(steps):
-        
-        canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
+    for i in range(steps+1):
+
+        xReal,yReal = undo_pseudopuntos(math.floor(x),math.floor(y))
+
+        canvas.create_rectangle(xReal - tamanio, yReal - tamanio, xReal + tamanio, yReal + tamanio, fill=color, outline=color)
 
         x -= xinc
         y -= yinc
         
+
+
 def dibujar_linea_bresenham():
     
         if len(coordenadas) >= 2:
@@ -136,8 +141,7 @@ def dibujar_linea_bresenham():
             else:
                 tamanio = float(canvas.itemcget(lapiz, "width")) * TAM_PIXEL
 
-            x1,y1=undo_pseudopuntos(x1,y1)
-            x2,y2=undo_pseudopuntos(x2,y2)            
+                       
 
             bresenham_algorithm(x1, y1, x2, y2, tamanio)
             
@@ -146,17 +150,43 @@ def dibujar_linea_bresenham():
 def bresenham_algorithm(x1, y1, x2, y2, size):
     dx = abs(x2 - x1)
     dy = abs(y2 - y1)
-    sx = 1 if x1 < x2 else -1
-    sy = 1 if y1 < y2 else -1
+
+    
+    def signo(x):
+        if x > 0:
+            return 1
+        elif x < 0:
+            return -1
+        else:
+            return 0
+
+    sx = signo(x2-x1)
+    sy = signo(y2-y1)
 
     color = canvas.itemcget(lapiz, "fill")
 
+    ne = 2 * dy -dx
+
+    for num in range(dx + 1):
+        x1Real,y1Real=undo_pseudopuntos(x1,y1)
+            
+        canvas.create_rectangle(x1Real , y1Real , x1Real + size, y1Real + size, fill=color, outline=color)
+
+        while ne >= 0:
+            y1 = y1 + 1 * sy
+            ne = ne - 2 * dx
+        x1 = x1 + 1 * sx
+        ne = ne + 2 * dy
+
+    '''
     if dx > dy:
         m = dy / dx
         e = m - size / dx
         while x1 != x2:
             #draw_point(x1, y1, size)
-            canvas.create_rectangle(x1 - size, y1 - size, x1 + size, y1 + size, fill=color, outline=color)
+            x1Real,y1Real=undo_pseudopuntos(x1,y1)
+            
+            canvas.create_rectangle(x1Real - size, y1Real - size, x1Real + size, y1Real + size, fill=color, outline=color)
             if e >= 0:
                 y1 += sy
                 e -= 1
@@ -166,14 +196,18 @@ def bresenham_algorithm(x1, y1, x2, y2, size):
         m = dx / dy
         e = m - size / dy
         while y1 != y2:
-            canvas.create_rectangle(x1 - size, y1 - size, x1 + size, y1 + size, fill=color, outline=color)
+            x1Real,y1Real=undo_pseudopuntos(x1,y1)
+            
+            canvas.create_rectangle(x1Real - size, y1Real - size, x1Real + size, y1Real + size, fill=color, outline=color)
             if e >= 0:
                 x1 += sx
                 e -= 1
             y1 += sy
             e += m
-
-    canvas.create_rectangle(x1 - size, y1 - size, x1 + size, y1 + size, fill=color, outline=color)
+    x1Real,y1Real=undo_pseudopuntos(x1,y1)
+            
+    canvas.create_rectangle(x1Real - size, y1Real - size, x1Real + size, y1Real + size, fill=color, outline=color)
+    '''
 
 def flush_canvas():
 
