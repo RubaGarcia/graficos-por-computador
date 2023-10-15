@@ -10,7 +10,8 @@ coordenadas_traducidas = []
 # array que indica donde están las líneas
 lineas = []
 
-
+TAM_PIXEL=6
+CANVAS_WIDTH=600
 
 
 # Función para cambiar el tamaño de los puntos en el Canvas
@@ -22,6 +23,28 @@ def cambiar_tamanio_punto():
 def cambiar_color_punto():
     nuevo_color = color_var.get()
     canvas.itemconfig(lapiz, fill=nuevo_color)
+
+
+
+def pseudopuntos(x,y):
+    x = (x - (CANVAS_WIDTH // 2)) // TAM_PIXEL
+    y = (y - (CANVAS_WIDTH // 2)) // TAM_PIXEL
+    return x,y
+
+def undo_pseudopuntos(x,y):
+    x = (x * TAM_PIXEL) + (CANVAS_WIDTH // 2)
+    y = (y * TAM_PIXEL) + (CANVAS_WIDTH // 2)
+    return x,y
+
+def dibujar_punto_linea(x1,y1, x2, y2):
+    tamanio = float(canvas.itemcget(lapiz, "width"))
+    color = canvas.itemcget(lapiz, "fill")
+    
+    canvas.create_rectangle(x1 - tamanio, y1 - tamanio, x1 + tamanio, y1 + tamanio, fill=color, outline=color)
+    canvas.create_rectangle(x2 - tamanio, y2 - tamanio, x2 + tamanio, y2 + tamanio, fill=color, outline=color)
+    canvas.create_line(x1, y1, x2, y2, fill=color, width=tamanio)
+    
+
 
 # Función para dibujar en el Canvas cuando se hace clic en él
 
@@ -66,6 +89,7 @@ def dibujar(event):
     coordenadas_label.pack()
 
 
+
 def dibujar_linea_bresenham():
     
         if len(coordenadas) >= 2:
@@ -77,46 +101,70 @@ def dibujar_linea_bresenham():
             y1=punto1[1]
             y2=punto2[1]
 
-            if canvas.itemcget(lapiz,"width")=="": #si no se ha definido el tamaño del lapiz se le asigna un tamaño de 2.0
-                tamanio = 2.0
+            if canvas.itemcget(lapiz,"width")=="":
+                tamanio = TAM_PIXEL
             else:
-                tamanio = float(canvas.itemcget(lapiz, "width"))
-
-            bresenham_algorithm(x1, y1, x2, y2, tamanio)
+                tamanio = float(canvas.itemcget(lapiz, "width")) * TAM_PIXEL
             
+            dx = abs(x2 - x1)
+            dy = abs(y2 - y1)           
+
+            if dx>=dy:
+                dibujar_punto(bresenham_algorithm(x1, y1, x2, y2, tamanio))
+            else:
+                List = bresenham_algorithm(y1, x1, y2, x2, tamanio)
+                ListaDibujo = []
+                for punto in List:
+                    ListaDibujo.append([punto[1],punto[0]])
+
+                dibujar_punto(ListaDibujo)
+
+            
+
 
 
 def bresenham_algorithm(x1, y1, x2, y2, size):
     dx = abs(x2 - x1)
     dy = abs(y2 - y1)
-    sx = 1 if x1 < x2 else -1
-    sy = 1 if y1 < y2 else -1
+
+    
+    def signo(x):
+        if x > 0:
+            return 1
+        elif x < 0:
+            return -1
+        else:
+            return 0
+
+    sx = signo(x2-x1)
+    sy = signo(y2-y1)
 
     color = canvas.itemcget(lapiz, "fill")
 
-    if dx > dy:
-        m = dy / dx
-        e = m - size / dx
-        while x1 != x2:
-            #draw_point(x1, y1, size)
-            canvas.create_rectangle(x1 - size, y1 - size, x1 + size, y1 + size, fill=color, outline=color)
-            if e >= 0:
-                y1 += sy
-                e -= 1
-            x1 += sx
-            e += m
-    else:
-        m = dx / dy
-        e = m - size / dy
-        while y1 != y2:
-            canvas.create_rectangle(x1 - size, y1 - size, x1 + size, y1 + size, fill=color, outline=color)
-            if e >= 0:
-                x1 += sx
-                e -= 1
-            y1 += sy
-            e += m
+    ne = 2 * dy -dx
 
-    canvas.create_rectangle(x1 - size, y1 - size, x1 + size, y1 + size, fill=color, outline=color)
+    L = []
+
+    for num in range(dx + 1):
+        
+            
+        L.append([x1,y1])
+
+        while ne >= 0:
+            y1 = y1 + 1 * sy
+            ne = ne - 2 * dx
+        x1 = x1 + 1 * sx
+        ne = ne + 2 * dy
+    
+    return L
+
+def dibujar_punto(Lista):
+    
+    color = canvas.itemcget(lapiz, "fill")
+    for punto in Lista:
+        x,y = undo_pseudopuntos(punto[0],punto[1])
+        canvas.create_rectangle(x, y, x + TAM_PIXEL, y + TAM_PIXEL, fill=color, outline=color)
+
 
 
 def traducir_coordenadas(x, y):
