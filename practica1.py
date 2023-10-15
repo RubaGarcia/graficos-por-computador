@@ -4,7 +4,18 @@ import math
 # Variables globales
 coordenadas = []
 
-TAM_PIXEL=3
+TAM_PIXEL=6
+
+'''
+class punto:
+    self.x=0
+    self.y=0
+    self.size=TAM_PIXEL
+
+    def __init__(self, x, y,size):
+        self.x=x
+        self.y=y
+        self.size=size'''
 
 # Función para cambiar el tamaño de los puntos en el Canvas
 def cambiar_tamanio_punto():
@@ -15,6 +26,8 @@ def cambiar_tamanio_punto():
 def cambiar_color_punto():
     nuevo_color = color_var.get()
     canvas.itemconfig(lapiz, fill=nuevo_color)
+
+
 
 # Función para dibujar en el Canvas cuando se hace clic en él
 def dibujar(event):
@@ -35,7 +48,7 @@ def dibujar(event):
         
     color = canvas.itemcget(lapiz, "fill")
     realx,realy=undo_pseudopuntos(x,y)
-    canvas.create_rectangle(realx - tamanio, realy - tamanio, realx + tamanio, realy + tamanio, fill=color, outline=color)
+    canvas.create_rectangle(realx , realy , realx + tamanio, realy + tamanio, fill=color, outline=color)
     # Crear una etiqueta para mostrar las coordenadas
     coordenadas_text = tk.StringVar()
 
@@ -118,7 +131,7 @@ def DDA_algorithm(x1, y1, x2, y2):
 
         xReal,yReal = undo_pseudopuntos(math.floor(x),math.floor(y))
 
-        canvas.create_rectangle(xReal - tamanio, yReal - tamanio, xReal + tamanio, yReal + tamanio, fill=color, outline=color)
+        canvas.create_rectangle(xReal , yReal , xReal + tamanio, yReal + tamanio, fill=color, outline=color)
 
         x -= xinc
         y -= yinc
@@ -140,11 +153,22 @@ def dibujar_linea_bresenham():
                 tamanio = TAM_PIXEL
             else:
                 tamanio = float(canvas.itemcget(lapiz, "width")) * TAM_PIXEL
-
-                       
-
-            bresenham_algorithm(x1, y1, x2, y2, tamanio)
             
+            dx = abs(x2 - x1)
+            dy = abs(y2 - y1)           
+
+            if dx>=dy:
+                dibujar_punto(bresenham_algorithm(x1, y1, x2, y2, tamanio))
+            else:
+                List = bresenham_algorithm(y1, x1, y2, x2, tamanio)
+                ListaDibujo = []
+                for punto in List:
+                    ListaDibujo.append([punto[1],punto[0]])
+
+                dibujar_punto(ListaDibujo)
+
+            
+
 
 
 def bresenham_algorithm(x1, y1, x2, y2, size):
@@ -167,47 +191,28 @@ def bresenham_algorithm(x1, y1, x2, y2, size):
 
     ne = 2 * dy -dx
 
+    L = []
+
     for num in range(dx + 1):
-        x1Real,y1Real=undo_pseudopuntos(x1,y1)
+        
             
-        canvas.create_rectangle(x1Real , y1Real , x1Real + size, y1Real + size, fill=color, outline=color)
+        L.append([x1,y1])
 
         while ne >= 0:
             y1 = y1 + 1 * sy
             ne = ne - 2 * dx
         x1 = x1 + 1 * sx
         ne = ne + 2 * dy
+    
+    return L
 
-    '''
-    if dx > dy:
-        m = dy / dx
-        e = m - size / dx
-        while x1 != x2:
-            #draw_point(x1, y1, size)
-            x1Real,y1Real=undo_pseudopuntos(x1,y1)
-            
-            canvas.create_rectangle(x1Real - size, y1Real - size, x1Real + size, y1Real + size, fill=color, outline=color)
-            if e >= 0:
-                y1 += sy
-                e -= 1
-            x1 += sx
-            e += m
-    else:
-        m = dx / dy
-        e = m - size / dy
-        while y1 != y2:
-            x1Real,y1Real=undo_pseudopuntos(x1,y1)
-            
-            canvas.create_rectangle(x1Real - size, y1Real - size, x1Real + size, y1Real + size, fill=color, outline=color)
-            if e >= 0:
-                x1 += sx
-                e -= 1
-            y1 += sy
-            e += m
-    x1Real,y1Real=undo_pseudopuntos(x1,y1)
-            
-    canvas.create_rectangle(x1Real - size, y1Real - size, x1Real + size, y1Real + size, fill=color, outline=color)
-    '''
+def dibujar_punto(Lista):
+    
+    color = canvas.itemcget(lapiz, "fill")
+    for punto in Lista:
+        x,y = undo_pseudopuntos(punto[0],punto[1])
+        canvas.create_rectangle(x, y, x + TAM_PIXEL, y + TAM_PIXEL, fill=color, outline=color)
+
 
 def flush_canvas():
 
@@ -219,57 +224,87 @@ def flush_canvas():
 
 
 
-def dibujar_linea_slope_intercept():
+def dibujar_linea_slope_intercept(elem1,elem2, m, b):
+    L = []
+    
+    x = elem1[0]
+    y = elem1[1]
+    x_final = elem2[0]
+
+    while x <= x_final:
+        L.append((x, y))
+        x += 1
+        y = round(m * x + b)
+
+    return L
+
+
+def slope_intercept_algorithm():
     if len(coordenadas) >= 2:
-        punto1=coordenadas[len(coordenadas) - 1]
-        punto2=coordenadas[len(coordenadas) - 2]
+        lista_dibujar = []
+        
+        elem1 = coordenadas[-2]
+        elem2 = coordenadas[-1]
+        
 
-        x1=punto1[0]
-        x2=punto2[0]
-        y1=punto1[1]
-        y2=punto2[1]
+        x1 = elem1[0]
+        y1 = elem1[1]
+        x2 = elem2[0]
+        y2 = elem2[1]
 
-        dx = x2 - x1
-        dy = y2 - y1
+        divisor = x2 - x1
 
-        m = dy/dx
+        if (divisor == 0):
+            y_ini = min(y1, y2)
+            y_fin = max(y1, y2)
+            x = x1
 
-        b = y1 - m*x1
-
-        if abs(y2-y1) < abs(x2-x1):
-            if(x1>x2):
-                slope_intercept_algorithm_low(x2, x1,  m, b)
-            else:
-                slope_intercept_algorithm_low(x1, x2,  m, b)
+            while y_ini <= y_fin:
+                lista_dibujar.append((x, y_ini))
+                y_ini += 1
         else:
-            if(y1>y2):
-                slope_intercept_algorithm_high(y2, y1, m, b)
-            else:
-                slope_intercept_algorithm_high(y1, y2, m, b)
+            m = (y2 - y1) / divisor
+            b = y1 - (m * x1)
+            if (m == 0):
+                x_ini = min(x1, x2)
+                x_fin = max(x1, x2)
+                y = y1
 
+                while x_ini <= x_fin:
+                    lista_dibujar.append((x_ini, y))
+                    x_ini += 1
+            else:
+                if (abs(m) <= 1):
+                    if (x1 > x2):
+                        elem1, elem2 = elem2, elem1
+                    lista_dibujar = dibujar_linea_slope_intercept(elem1, elem2, m, b)
+                else:
+                    if (y1 > y2):
+                        elem1, elem2 = elem2, elem1
+                    inv_m = 1/m
+                    lista_aux = dibujar_linea_slope_intercept((elem1[1], elem1[0]), (elem2[1], elem2[0]),
+                                                inv_m, elem1[0] - (inv_m * elem1[1]))
+                    for pixel in lista_aux:
+                        lista_dibujar.append((pixel[1], pixel[0]))
+
+
+        dibujar_punto(lista_dibujar)
+            
+def slope_intercept(elem1, elem2, m, b):
+    L = []
+    
+    x = elem1[0]
+    y = elem1[1]
+    x_final = elem2[0]
+
+    while x <= x_final:
+        L.append((x, y))
+        x += 1
+        y = round(m * x + b)
+
+    return L
     
 
-def slope_intercept_algorithm_low(x1, x2, m, b):
-    x = x1
-    while x < x2:
-        y = m * x + b
-        tamanio = float(canvas.itemcget(lapiz, "width")) * TAM_PIXEL
-        color = canvas.itemcget(lapiz, "fill")
-
-        canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
-
-        x += tamanio  # Incrementar x en cada iteración del bucle while
-
-def slope_intercept_algorithm_high( y1, y2, m, b):
-    y = y1
-    while y < y2:
-        x = (y - b) / m
-        tamanio = float(canvas.itemcget(lapiz, "width")) * TAM_PIXEL
-        color = canvas.itemcget(lapiz, "fill")
-
-        canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
-
-        y += tamanio  # Incrementar y en cada iteración del bucle while
     
 def metodo_vacio():
     print("Hola mundo")
@@ -303,13 +338,14 @@ canvas.bind("<Button-1>", dibujar)
 frame = tk.Frame(root)
 frame.pack(side=tk.RIGHT, padx=10, pady=10)
 
+'''
 # Crear una entrada para cambiar el tamaño del punto
 label_tamanio = tk.Label(frame, text="Tamaño del punto:")
 label_tamanio.pack()
 entry_tamanio = tk.Entry(frame)
 entry_tamanio.pack()
 btn_cambiar_tamanio = tk.Button(frame, text="Cambiar Tamaño", command=cambiar_tamanio_punto)
-btn_cambiar_tamanio.pack()
+btn_cambiar_tamanio.pack()'''
 
 # Crear una lista de opciones de colores
 colores = ["black", "red", "green", "blue", "orange", "purple", "pink"]
@@ -329,7 +365,7 @@ btn_dibujar_linea.pack()
 
 
 # Crear un botón para dibujar líneas
-slope_intercept = tk.Button(frame, text="Slope Intercept", command=dibujar_linea_slope_intercept)
+slope_intercept = tk.Button(frame, text="Slope Intercept", command=slope_intercept_algorithm)
 slope_intercept.pack()
 # Crear un botón para dibujar líneas
 btn_dda = tk.Button(frame, text="DDA", command=dibujar_linea_DDA)
