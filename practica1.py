@@ -18,10 +18,11 @@ class punto:
         self.size=size'''
 
 # Función para cambiar el tamaño de los puntos en el Canvas
+'''
 def cambiar_tamanio_punto():
     nuevo_tamanio = float(entry_tamanio.get())
     canvas.itemconfig(lapiz, width=nuevo_tamanio)
-
+'''
 # Función para cambiar el color de los puntos en el Canvas
 def cambiar_color_punto():
     nuevo_color = color_var.get()
