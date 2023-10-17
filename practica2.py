@@ -1,7 +1,7 @@
 import tkinter as tk
 import math
 import random
-
+import numpy as np
 
 # Variables globales
 coordenadas = []
@@ -201,8 +201,12 @@ def traslation():
 
     trasl_matrix=[trasl_x, trasl_y, 1]
     #array bidimensional con las coordenadas y una fila extra de todo ceroy el ultimo valor un 1
-    coordenadas_traducidas = [[0 for x in range(3)] for y in range(len(coordenadas))]
-    
+
+    coords_transf=np.array(coordenadas).T
+    ceros = np.zeros(len(coordenadas)+1)
+    ceros[len(coordenadas)]=1
+    coords_transf = np.vstack(coords_transf,ceros)
+    #TODO probar que funcione bien
 
     #se recorre el array de coordenadas y se trasladan los puntos
     for i in range(len(coordenadas)):
