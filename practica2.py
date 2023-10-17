@@ -193,10 +193,17 @@ def traslation():
         print("no hay coordenadas")
         return -1
     
+    
     #se obtienen los valores de traslacion en x y en y
     trasl_x = int(entry_trasl_x.get())
     trasl_y = int(entry_trasl_y.get())
-    '''
+    
+
+    trasl_matrix=[trasl_x, trasl_y, 1]
+    #array bidimensional con las coordenadas y una fila extra de todo ceroy el ultimo valor un 1
+    coordenadas_traducidas = [[0 for x in range(3)] for y in range(len(coordenadas))]
+    
+
     #se recorre el array de coordenadas y se trasladan los puntos
     for i in range(len(coordenadas)):
         coordenadas_traducidas[i][0] = coordenadas_traducidas[i][0] + trasl_x
@@ -204,6 +211,7 @@ def traslation():
 
     for i in range(len(coordenadas)):
         coordenadas[i] = destraduccir_coordenadas(coordenadas_traducidas[i][0], coordenadas_traducidas[i][1])
+    
     '''
     for i in range(len(coordenadas)):
 
@@ -256,6 +264,8 @@ def traslation():
             tamanio = float(canvas.itemcget(lapiz, "width"))
 
         bresenham_algorithm(x1, y1, x2, y2, tamanio)
+
+    '''
 
         
 
