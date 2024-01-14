@@ -7,6 +7,7 @@ import numpy as np
 coordenadas = []
 coordenadas_traducidas = []
 # array que indica donde están las líneas
+puntos = None
 lineas = []
 
 TAM_PIXEL=6
@@ -53,31 +54,28 @@ def dibujar(event):
 
     x, y = pseudopuntos(x,y)
 
-    coordenadas.append([x, y])
 
-    print(coordenadas)
-    print (len(coordenadas))
+    coordenadas.append([x,y])
+    global puntos
+    if puntos is None:
+        unos = np.ones(3)
+        puntos = np.c_[unos,[x,y,1]]
+        puntos = np.delete(puntos, 0, 1)  
+    elif puntos is not None:
+        puntos = np.c_[puntos,[x,y,1]]
+        
+    print(puntos)
+    #print(len(puntos))
+    print (len(puntos[0]))
 
-    if canvas.itemcget(lapiz,"width")=="":
-        tamanio = TAM_PIXEL
-    else:
-        tamanio = float(canvas.itemcget(lapiz, "width")) * TAM_PIXEL
+
         
     color = canvas.itemcget(lapiz, "fill")
     realx,realy=undo_pseudopuntos(x,y)
-    canvas.create_rectangle(realx , realy , realx + tamanio, realy + tamanio, fill=color, outline=color)
-    # Crear una etiqueta para mostrar las coordenadas
-    coordenadas_text = tk.StringVar()
-
-    #en caso de que sea la primera vez que se impriman las coordenadastendra el inidcador de las coordenadas
-    if len(coordenadas) < 2:
-        coords_str= "coordenadas:" +str(x-300)+","+str(-(y-300))
-    else:
-        coords_str=str(x-300)+","+str(-(y-300))
-
-    coordenadas_text.set(coords_str)
-    coordenadas_label = tk.Label(frame, textvariable=coordenadas_text)
-    coordenadas_label.pack()
+    canvas.create_rectangle(realx , realy , realx + TAM_PIXEL, realy + TAM_PIXEL, fill=color, outline=color)
+    
+      
+        
 
 
 
@@ -95,10 +93,6 @@ def dibujar_linea_bresenham():
             y1=punto1[1]
             y2=punto2[1]
 
-            if canvas.itemcget(lapiz,"width")=="":
-                tamanio = TAM_PIXEL
-            else:
-                tamanio = float(canvas.itemcget(lapiz, "width")) * TAM_PIXEL
             
             dx = abs(x2 - x1)
             dy = abs(y2 - y1)           
@@ -113,13 +107,33 @@ def dibujar_linea_bresenham():
 
                 dibujar_punto(ListaDibujo)
 
-            
+def dibujar_linea_bresenham_input(index):
+    punto1 = coordenadas[index]
+    punto2 = coordenadas[index-1]
 
+    x1 = punto1[0]
+    x2 = punto2[0]
+    y1 = punto1[1]
+    y2 = punto2[1]
+
+    dx = abs(x2 - x1)
+    dy = abs(y2 - y1)
+
+    if dx >= dy:
+        dibujar_punto(bresenham_algorithm(x1, y1, x2, y2))
+    else:
+        List = bresenham_algorithm(y1, x1, y2, x2)
+        ListaDibujo = []
+        for punto in List:
+            ListaDibujo.append([punto[1], punto[0]])
+
+        dibujar_punto(ListaDibujo)
 
 
 def bresenham_algorithm(x1, y1, x2, y2):
-    dx = abs(x2 - x1)
-    dy = abs(y2 - y1)
+    dx = int(abs(x2 - x1))
+    dy = int(abs(y2 - y1))
+    
 
     
     def signo(x):
@@ -133,7 +147,6 @@ def bresenham_algorithm(x1, y1, x2, y2):
     sx = signo(x2-x1)
     sy = signo(y2-y1)
 
-    color = canvas.itemcget(lapiz, "fill")
 
     ne = 2 * dy -dx
 
@@ -161,25 +174,10 @@ def dibujar_punto(Lista):
 
 
 
-def traducir_coordenadas(x, y):
-    x = x - 300
-    y = (- y - 300)
-
-    return [x, y]
-
-
-def destraduccir_coordenadas(x, y):
-    #pasar los ejes a coordenadas positivas de forma que entren en el canvas
-    x = x + 300
-    y = - y + 300
-
-    return [x, y]
-
-
 def traslation():
     #este metodo trasladará los puntos que se encuentren en el array de coordenadas en funcion de las entradas de traslacion en x y en y
     #se debe de verificar que el array de coordenadas no este vacio
-   
+    global puntos
     
     print("traslation algorithm")
 
@@ -192,73 +190,30 @@ def traslation():
     trasl_x = int(entry_trasl_x.get())
     trasl_y = int(entry_trasl_y.get())
     
-
-    trasl_matrix=[trasl_x, trasl_y, 1]
     #array bidimensional con las coordenadas y una fila extra de todo ceroy el ultimo valor un 1
 
-    coords_transf=np.array(coordenadas).T
-    ceros = np.zeros(len(coordenadas)+1)
-    ceros[len(coordenadas)]=1
-    coords_transf = np.vstack(coords_transf,ceros)
-    #TODO probar que funcione bien
+    id = np.identity(3)
+    id[0][2] = trasl_x
+    id[1][2] = trasl_y
 
-    #se recorre el array de coordenadas y se trasladan los puntos
+
+    result_matrix = id@puntos
     
+    result_matrix.astype(int)
     
-    '''
-    for i in range(len(coordenadas)):
 
-        x = coordenadas[i][0]
-        y = coordenadas[i][1]
-
-
-        x=x-300
-        y=-(y-300)
-
-        x = x + trasl_x
-        y = y + trasl_y
-
-        coordenadas[i] = destraduccir_coordenadas(x,y)    
-    #se limpia el canvas
+    puntos = result_matrix
+    for i in range(len(puntos[0])):
+        coordenadas[i] = [result_matrix[0][i],result_matrix[1][i]]
+        print(coordenadas[i])
+    
     flush_canvas()
 
-
-
-
-    #se dibujan los puntos
-    for i in range(len(coordenadas)):
-
-        
-
-        x = coordenadas[i][0]
-        y = coordenadas[i][1]
-
-        
-
-        color = canvas.itemcget(lapiz, "fill")
-
-        canvas.create_rectangle(x - tamanhos_coords[i], y - tamanhos_coords[i],
-                                 x + tamanhos_coords[i], y + tamanhos_coords[i], fill=color, outline=color)
-
-    #se dibujan las lineas
+    dibujar_punto(coordenadas)
+   
     for i in range(len(lineas)):
-        punto1=coordenadas[lineas[i]]
-        punto2=coordenadas[lineas[i]-1]
-
-        x1=punto1[0]
-        x2=punto2[0]
-        y1=punto1[1]
-        y2=punto2[1]
-
-
-        if canvas.itemcget(lapiz,"width")=="": #si no se ha definido el tamaño del lapiz se le asigna un tamaño de 2.0
-            tamanio = 2.0
-        else:
-            tamanio = float(canvas.itemcget(lapiz, "width"))
-
-        bresenham_algorithm(x1, y1, x2, y2, tamanio)
-
-    '''
+        print(lineas[i])
+        dibujar_linea_bresenham_input(lineas[i])
 
         
 
@@ -266,6 +221,11 @@ def traslation():
 #metodo vacio para que no marque error
 def metodo_vacio():
     print("Hola mundo")
+
+
+def rot_function():
+    print("rot_function")
+    coordenadas = rotacion()
 
 def rotacion():
     #funcion que toma los puntos del array de coordenadas y los rota en funcion de la entrada de rotacion.
@@ -275,7 +235,7 @@ def rotacion():
 
     #TODO arreglar bug de que los puntos se acerquen al centro del canvas
 
-    #print("rotation algorithm")
+    print("rotation algorithm")
 
 
     if len(coordenadas) < 1:
@@ -285,37 +245,89 @@ def rotacion():
     
     #se obtiene el valor de rotacion
     rot_alfa = int(entry_rot_alfa.get())
-    
+    rot_alfa = math.radians(rot_alfa)
+    print(rot_alfa)
     #se recorre el array de coordenadas y se rota cada punto
+
+
+    id=np.identity(3)
+    id[0][0]=math.cos(rot_alfa)
+    id[0][1]=-(math.sin(rot_alfa))
+    id[1][0]=math.sin(rot_alfa)
+    id[1][1]=math.cos(rot_alfa)
+
+    global puntos
+    result_matrix = id@puntos
+
+    result_matrix.astype(int)
+
+    puntos = result_matrix
+
+    for i in range(len(puntos[0])):
+        coordenadas[i] = [result_matrix[0][i],result_matrix[1][i]]
+        print(coordenadas[i])
     
-    array_aux=[]
-
-    for punto in coordenadas:
-        array_aux.append(rotar_punto(punto, rot_alfa))
-
-    coordenadas = array_aux
     flush_canvas()
 
     dibujar_punto(coordenadas)
+   
+    for i in range(len(lineas)):
+        print(lineas[i])
+        dibujar_linea_bresenham_input(lineas[i])
 
-    for linea in lineas:
-        bresenham_algorithm(coordenadas[linea], coordenadas[linea-1])
+def rotacion(grados):
+    #funcion que toma los puntos del array de coordenadas y los rota en funcion de la entrada de rotacion.
+    #se rotan los elementos en funcion del centro del canvas
+    #se debe de verificar que el array de coordenadas no este vacio
+    
+
+    #TODO arreglar bug de que los puntos se acerquen al centro del canvas
+
+    print("rotation algorithm")
+
+
+    if len(coordenadas) < 1:
+        
+        print("no hay coordenadas")
+        return -1
+    
+    #se obtiene el valor de rotacion
+    rot_alfa = grados
+    rot_alfa = math.radians(rot_alfa)
+    print(rot_alfa)
+    #se recorre el array de coordenadas y se rota cada punto
+
+
+    id=np.identity(3)
+    id[0][0]=math.cos(rot_alfa)
+    id[0][1]=-(math.sin(rot_alfa))
+    id[1][0]=math.sin(rot_alfa)
+    id[1][1]=math.cos(rot_alfa)
+
+    global puntos
+    result_matrix = id@puntos
+
+    result_matrix.astype(int)
+
+    puntos = result_matrix
+
+    for i in range(len(puntos[0])):
+        coordenadas[i] = [result_matrix[0][i],result_matrix[1][i]]
+        print(coordenadas[i])
+    
+    flush_canvas()
+
+    dibujar_punto(coordenadas)
+   
+    for i in range(len(lineas)):
+        print(lineas[i])
+        dibujar_linea_bresenham_input(lineas[i])
 
 
 
 
-def rotar_punto(punto, angulo_grados):
-    # Convierte el ángulo de grados a radianes
-    angulo_radianes = np.radians(angulo_grados)
 
-    # Crea la matriz de rotación
-    matriz_rotacion = np.array([[np.cos(angulo_radianes), -np.sin(angulo_radianes)],
-                                [np.sin(angulo_radianes), np.cos(angulo_radianes)]])
 
-    # Multiplica la matriz de rotación por el punto
-    punto_rotado = np.dot(matriz_rotacion, np.array(punto))
-
-    return punto_rotado
 
 
 def escalado():
@@ -328,146 +340,133 @@ def escalado():
     esc_x = float(entry_esc_x.get())
     esc_y = float(entry_esc_y.get())
     
-    #se recorre el array de coordenadas y se escala cada punto
-    for i in range(len(coordenadas)):
-        x = coordenadas[i][0]
-        y = coordenadas[i][1]
+    id = np.identity(3)
+    id[0][0] = esc_x
+    id[1][1] = esc_y
 
-        coordenadas_traducidas[i][0] = x * esc_x
-        coordenadas_traducidas[i][1] = y * esc_y
+    global puntos
+    result_matrix = id@puntos
 
-    for i in range(len(coordenadas)):
-        coordenadas[i] = destraduccir_coordenadas(coordenadas_traducidas[i][0], coordenadas_traducidas[i][1])
+    result_matrix.astype(int)
 
-    #se limpia el canvas
+    puntos = result_matrix
+
+    for i in range(len(puntos[0])):
+        coordenadas[i] = [result_matrix[0][i],result_matrix[1][i]]
+        print(coordenadas[i])
+    
     flush_canvas()
 
-    
-
-    #se dibujan los puntos
-    for i in range(len(coordenadas)):
-        x = coordenadas[i][0]
-        y = coordenadas[i][1]
-
-        if canvas.itemcget(lapiz,"width")=="":
-
-            tamanio = 2.0 
-        else:
-            tamanio = float(canvas.itemcget(lapiz, "width"))
-        color = canvas.itemcget(lapiz, "fill")
-
-        canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
-
-    #se dibujan las lineas
+    dibujar_punto(coordenadas)
+   
     for i in range(len(lineas)):
-        punto1=coordenadas[lineas[i]]
-        punto2=coordenadas[lineas[i]-1]
-
-        x1=punto1[0]
-        x2=punto2[0]
-        y1=punto1[1]
-        y2=punto2[1]
-
-        if canvas.itemcget(lapiz,"width")=="": #si no se ha definido el tamaño del lapiz se le asigna un tamaño de 2.0
-            tamanio = 2.0
-        else:
-            tamanio = float(canvas.itemcget(lapiz, "width"))
-
-        bresenham_algorithm(x1, y1, x2, y2, tamanio)
-    
+        print(lineas[i])
+        dibujar_linea_bresenham_input(lineas[i])
+  
 
 def flush_canvas():
     canvas.create_rectangle(0, 0, 600, 600, fill="white", outline="white")
     canvas.create_line(300,0,300,600,fill="black", width=1)
     canvas.create_line(0,300,600,300,fill="black", width=1)
 
-def rotate(grados):
-    
-    #funcion que toma los puntos del array de coordenadas y los rota en funcion de la entrada de rotacion.
-    #se rotan los elementos en funcion del centro del canvas
+def shearing():
+    #funcion que toma los puntos del array de coordenadas y los cizalla en funcion de las entradas de cizalla en x y en y.
     #se debe de verificar que el array de coordenadas no este vacio
-    
-
-    #TODO arreglar bug de que los puntos se acerquen al centro del canvas
-    #TODO se supone que igual con calculo matricial se puede arreglar pero no tengo mucha fe
-
-    #print("rotation algorithm")
-
-
     if len(coordenadas) <= 0:
-        
-        print("no hay coordenadas")
         return -1
     
-    #se obtiene el valor de rotacion
-    rot_alfa = grados
+    #se obtienen los valores de escalado en x y en y
+    ciz_x = float(entry_ciz_x.get())
+    ciz_y = float(entry_ciz_y.get())
     
-    alfa_radianes = math.radians(rot_alfa)
-    #se recorre el array de coordenadas y se rota cada punto
+    id = np.identity(3)
+    id[0][1] = ciz_x
+    id[1][0] = ciz_y
+
+    global puntos
+    result_matrix = id@puntos
+
+    result_matrix.astype(int)
+
+    puntos = result_matrix
+
+    for i in range(len(puntos[0])):
+        coordenadas[i] = [result_matrix[0][i],result_matrix[1][i]]
+        print(coordenadas[i])
     
-    for i in range(len(coordenadas)):
-
-        x = coordenadas[i][0]
-        y = coordenadas[i][1]
-
-
-        x=x-300
-        y=-(y-300)
-
-        x = round( (x * math.cos(alfa_radianes)) - (y * math.sin(alfa_radianes)), 0)
-        y = round( (x * math.sin(alfa_radianes)) + (y * math.cos(alfa_radianes)), 0)
-
-        coordenadas[i] = destraduccir_coordenadas(x,y)
-
-    
-
-    #se limpia el canvas
     flush_canvas()
 
-    
-
-    #se dibujan los puntos
-    for i in range(len(coordenadas)):
-        x = coordenadas[i][0]
-        y = coordenadas[i][1]
-
-        if canvas.itemcget(lapiz,"width")=="":
-
-            tamanio = 2.0 
-        else:
-            tamanio = float(canvas.itemcget(lapiz, "width"))
-        color = canvas.itemcget(lapiz, "fill")
-
-        canvas.create_rectangle(x - tamanio, y - tamanio, x + tamanio, y + tamanio, fill=color, outline=color)
-
-    #se dibujan las lineas
+    dibujar_punto(coordenadas)
+   
     for i in range(len(lineas)):
-        punto1=coordenadas[lineas[i]]
-        punto2=coordenadas[lineas[i]-1]
-
-        x1=punto1[0]
-        x2=punto2[0]
-        y1=punto1[1]
-        y2=punto2[1]
-
-
-        dist=math.sqrt((x2-x1)**2+(y2-y1)**2)
-
-        print ("rot = ",rot_alfa,"dist = " ,dist)
-
-        if canvas.itemcget(lapiz,"width")=="": #si no se ha definido el tamaño del lapiz se le asigna un tamaño de 2.0
-            tamanio = 2.0
-        else:
-            tamanio = float(canvas.itemcget(lapiz, "width"))
-            
-        bresenham_algorithm(x1, y1, x2, y2, tamanio)
+        print(lineas[i])
+        dibujar_linea_bresenham_input(lineas[i])
+       
+def reflexion_x():
+    #funcion que toma los puntos del array de coordenadas y los refleja en funcion de la entrada de reflexion en x.
+    #se debe de verificar que el array de coordenadas no este vacio
+    if len(coordenadas) <= 0:
+        return -1
+    
+    
+    id = np.identity(3)
+    id[1][1] = -1
 
 
+    global puntos
+    result_matrix = id@puntos
 
-def rot_animation():
-        rot_alfa = int(entry_rot_alfa.get())
-        for i in range(rot_alfa):
-            rotate(1)
+    result_matrix.astype(int)
+
+    puntos = result_matrix
+
+    for i in range(len(puntos[0])):
+        coordenadas[i] = [result_matrix[0][i],result_matrix[1][i]]
+        print(coordenadas[i])
+    
+    flush_canvas()
+
+    dibujar_punto(coordenadas)
+   
+    for i in range(len(lineas)):
+        print(lineas[i])
+        dibujar_linea_bresenham_input(lineas[i])
+
+
+def reflexion_y():
+    #funcion que toma los puntos del array de coordenadas y los refleja en funcion de la entrada de reflexion en y.
+    #se debe de verificar que el array de coordenadas no este vacio
+    if len(coordenadas) <= 0:
+        return -1
+    
+    
+    id = np.identity(3)
+    id[0][0] = -1
+    global puntos
+    result_matrix = id@puntos
+
+    result_matrix.astype(int)
+    
+    puntos = result_matrix
+
+    for i in range(len(puntos[0])):
+        coordenadas[i] = [result_matrix[0][i],result_matrix[1][i]]
+        print(coordenadas[i])
+    
+    flush_canvas()
+
+    dibujar_punto(coordenadas)
+   
+    for i in range(len(lineas)):
+        print(lineas[i])
+        dibujar_linea_bresenham_input(lineas[i])
+
+def reflexion_45():
+    rotacion(45)
+    reflexion_x()
+    rotacion(-45)
+
+
 
 def movidas():
 
@@ -555,8 +554,8 @@ entry_rot_alfa.pack()
 
 btn_rot = tk.Button(frame, text="Rotación", command=rotacion)
 btn_rot.pack()
-btn_rot_animation = tk.Button(frame, text="Rotación animada", command=rot_animation)
-btn_rot_animation.pack()
+#btn_rot_animation = tk.Button(frame, text="Rotación animada", command=rot_animation)
+#btn_rot_animation.pack()
 
 
 #Escalado
@@ -577,6 +576,30 @@ btn_esc.pack()
 btn_random = tk.Button(frame, text="Random", command=movidas)
 btn_random.pack()
 
+#cizalla
+label_ciz_x = tk.Label(frame, text="Cizalla en x")
+label_ciz_x.pack()
+entry_ciz_x = tk.Entry(frame)   
+entry_ciz_x.pack()
+
+label_ciz_y = tk.Label(frame, text="Cizalla en y")
+label_ciz_y.pack()
+entry_ciz_y = tk.Entry(frame)
+entry_ciz_y.pack()
+
+btn_ciz = tk.Button(frame, text="Cizalla", command=shearing)
+btn_ciz.pack()
+
+#reflexion
+btn_reflexion_x = tk.Button(frame, text="Reflexion en x", command=reflexion_x)
+
+btn_reflexion_x.pack()
+
+btn_reflexion_y = tk.Button(frame, text="Reflexion en y", command=reflexion_y)
+btn_reflexion_y.pack()
+
+btn_reflexion_recta = tk.Button(frame, text="Reflexion en recta", command=reflexion_45)
+btn_reflexion_recta.pack()
 
 # Ejecutar la aplicación
 root.mainloop()
