@@ -1,3 +1,4 @@
+import matplotlib as mpl
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -22,7 +23,7 @@ def calculate_julia(z, c, max_iter):
     return max_iter
 
 def plot_julia_set(julia_matrix):
-    plt.imshow(julia_matrix, cmap='hot', extent=(-2, 2, -2, 2))
+    plt.imshow(julia_matrix, extent=(-2, 2, -2, 2))
     #plt.colorbar()
     plt.axis('off')  # Desactivar ejes
     plt.tight_layout(pad=0)  # Eliminar márgenes
