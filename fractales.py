@@ -52,7 +52,7 @@ def calculate_mandelbrot(c, max_iter):
 
 def plot_mandelbrot_set(mandelbrot_matrix):
     plt.imshow(mandelbrot_matrix, cmap='hot', extent=(-2, 2, -2, 2))
-    plt.colorbar()
+    #plt.colorbar()
     plt.axis('off')
     plt.tight_layout(pad=0)
     plt.title("Conjunto de Mandelbrot")
