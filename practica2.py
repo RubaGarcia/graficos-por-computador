@@ -2,6 +2,9 @@ import tkinter as tk
 import math
 import random
 import numpy as np
+from PIL import Image
+from PIL import ImageDraw
+
 
 # Variables globales
 coordenadas = []
@@ -24,8 +27,6 @@ def cambiar_color_punto():
     nuevo_color = color_var.get()
     canvas.itemconfig(lapiz, fill=nuevo_color)
 
-
-
 def pseudopuntos(x,y):
     x = (x - (CANVAS_WIDTH // 2)) // TAM_PIXEL
     y = (y - (CANVAS_WIDTH // 2)) // TAM_PIXEL
@@ -43,10 +44,6 @@ def dibujar_punto_linea(x1,y1, x2, y2):
     canvas.create_rectangle(x1 - tamanio, y1 - tamanio, x1 + tamanio, y1 + tamanio, fill=color, outline=color)
     canvas.create_rectangle(x2 - tamanio, y2 - tamanio, x2 + tamanio, y2 + tamanio, fill=color, outline=color)
     canvas.create_line(x1, y1, x2, y2, fill=color, width=tamanio)
-    
-
-
-# Función para dibujar en el Canvas cuando se hace clic en él
 
 def dibujar(event):
     x, y = event.x, event.y
@@ -64,20 +61,15 @@ def dibujar(event):
     elif puntos is not None:
         puntos = np.c_[puntos,[x,y,1]]
         
-    print(puntos)
+    #print(puntos)
     #print(len(puntos))
-    print (len(puntos[0]))
+    #print (len(puntos[0]))
 
 
         
     color = canvas.itemcget(lapiz, "fill")
     realx,realy=undo_pseudopuntos(x,y)
     canvas.create_rectangle(realx , realy , realx + TAM_PIXEL, realy + TAM_PIXEL, fill=color, outline=color)
-    
-      
-        
-
-
 
 def dibujar_linea_bresenham():
     
@@ -129,7 +121,6 @@ def dibujar_linea_bresenham_input(index):
 
         dibujar_punto(ListaDibujo)
 
-
 def bresenham_algorithm(x1, y1, x2, y2):
     dx = int(abs(x2 - x1))
     dy = int(abs(y2 - y1))
@@ -172,8 +163,6 @@ def dibujar_punto(Lista):
         x,y = undo_pseudopuntos(punto[0],punto[1])
         canvas.create_rectangle(x, y, x + TAM_PIXEL, y + TAM_PIXEL, fill=color, outline=color)
 
-
-
 def traslation():
     #este metodo trasladará los puntos que se encuentren en el array de coordenadas en funcion de las entradas de traslacion en x y en y
     #se debe de verificar que el array de coordenadas no este vacio
@@ -215,13 +204,8 @@ def traslation():
         print(lineas[i])
         dibujar_linea_bresenham_input(lineas[i])
 
-        
-
-
-#metodo vacio para que no marque error
 def metodo_vacio():
     print("Hola mundo")
-
 
 def rot_function():
     print("rot_function")
@@ -232,8 +216,6 @@ def rotacion():
     #se rotan los elementos en funcion del centro del canvas
     #se debe de verificar que el array de coordenadas no este vacio
     
-
-    #TODO arreglar bug de que los puntos se acerquen al centro del canvas
 
     print("rotation algorithm")
 
@@ -275,13 +257,11 @@ def rotacion():
         print(lineas[i])
         dibujar_linea_bresenham_input(lineas[i])
 
-def rotacion(grados):
+def rotacion_g(grados):
     #funcion que toma los puntos del array de coordenadas y los rota en funcion de la entrada de rotacion.
     #se rotan los elementos en funcion del centro del canvas
     #se debe de verificar que el array de coordenadas no este vacio
-    
 
-    #TODO arreglar bug de que los puntos se acerquen al centro del canvas
 
     print("rotation algorithm")
 
@@ -323,13 +303,6 @@ def rotacion(grados):
         print(lineas[i])
         dibujar_linea_bresenham_input(lineas[i])
 
-
-
-
-
-
-
-
 def escalado():
     #funcion que toma los puntos del array de coordenadas y los escala en funcion de las entradas de escalado en x y en y.
     #se debe de verificar que el array de coordenadas no este vacio
@@ -363,7 +336,6 @@ def escalado():
         print(lineas[i])
         dibujar_linea_bresenham_input(lineas[i])
   
-
 def flush_canvas():
     canvas.create_rectangle(0, 0, 600, 600, fill="white", outline="white")
     canvas.create_line(300,0,300,600,fill="black", width=1)
@@ -432,7 +404,6 @@ def reflexion_x():
         print(lineas[i])
         dibujar_linea_bresenham_input(lineas[i])
 
-
 def reflexion_y():
     #funcion que toma los puntos del array de coordenadas y los refleja en funcion de la entrada de reflexion en y.
     #se debe de verificar que el array de coordenadas no este vacio
@@ -462,22 +433,68 @@ def reflexion_y():
         dibujar_linea_bresenham_input(lineas[i])
 
 def reflexion_45():
-    rotacion(45)
+    rotacion_g(45)
     reflexion_x()
-    rotacion(-45)
+    rotacion_g(-45)
 
 
+def save_image():
+    image = Image.new("RGB", (CANVAS_WIDTH, CANVAS_WIDTH), "white")
+    draw = ImageDraw.Draw(image)
 
-def movidas():
+    writing_list = puntos.astype(int)
 
-    for i in range (300):
-        coordenadas.append([random.randint(0,600),random.randint(0,600)])
-        tamanhos_coords.append(random.randint(1,5))
-    print ("buenas tardes")
-    '''
-    for i in range (20):
-        print("hola")
-        rotate(30)'''
+    print(writing_list)
+    for i in range(len(coordenadas)):
+        x = writing_list[0][i] * TAM_PIXEL + (CANVAS_WIDTH // 2)
+        y = writing_list[1][i] * TAM_PIXEL + (CANVAS_WIDTH // 2)
+        color = canvas.itemcget(lapiz, "fill")
+        draw.rectangle((x, y, x + TAM_PIXEL, y + TAM_PIXEL), fill=color, outline=color)
+
+    for i in range(len(lineas)-1):
+        lista_dibujar = []
+        
+        color_linea = color
+        print(writing_list)
+        print(writing_list[0])
+        elem1 = (writing_list[0][lineas[i]], writing_list[1][lineas[i]])
+        elem2 = (writing_list[0][lineas[i + 1]], writing_list[1][lineas[i + 1]])
+
+        dx = abs(elem2[0] - elem1[0])
+        dy = abs(elem2[1] - elem1[1])
+        x1 = elem1[0]
+        y1 = elem1[1]
+        x2 = elem2[0]
+        y2 = elem2[1]
+
+
+        if (dx >= dy):
+            lista_dibujar = bresenham_algorithm(x1, y1, x2, y2) 
+        else:
+            lista_aux = bresenham_algorithm(y1, x1, y2, x2)
+            for pixel in lista_aux:
+                lista_dibujar.append((pixel[1], pixel[0]))
+
+        for pixel in lista_dibujar:
+            drawingX = pixel[0] * TAM_PIXEL + (CANVAS_WIDTH // 2)
+            drawingY = pixel[1] * TAM_PIXEL + (CANVAS_WIDTH // 2)
+            draw.rectangle((drawingX, drawingY, drawingX + TAM_PIXEL, drawingY + TAM_PIXEL), fill=color_linea)
+
+
+    nombre = nombre_archivo.get()
+    
+    # Verificar si la cadena de nombre tiene una extensión
+    if not nombre.endswith(('.png', '.jpg', '.jpeg', '.gif')):
+        # Si no tiene una extensión, agregar ".png" por defecto
+        nombre += ".png"
+
+    try:
+        image.save(nombre)
+        print(f"Imagen guardada como {nombre}")
+    except Exception as e:
+        print(f"Error al guardar la imagen: {e}")
+
+    image.save(nombre)
     
 # Crear la ventana principal
 root = tk.Tk()
@@ -573,8 +590,7 @@ entry_esc_y.pack()
 btn_esc = tk.Button(frame, text="Escalado", command=escalado)
 btn_esc.pack()
 
-btn_random = tk.Button(frame, text="Random", command=movidas)
-btn_random.pack()
+
 
 #cizalla
 label_ciz_x = tk.Label(frame, text="Cizalla en x")
@@ -600,6 +616,13 @@ btn_reflexion_y.pack()
 
 btn_reflexion_recta = tk.Button(frame, text="Reflexion en recta", command=reflexion_45)
 btn_reflexion_recta.pack()
+
+btn_save_image = tk.Button(frame, text="Guardar imagen", command=save_image)
+label_nombre_archivo = tk.Label(frame, text="Nombre del archivo")
+label_nombre_archivo.pack()
+nombre_archivo = tk.Entry(frame)
+nombre_archivo.pack()
+btn_save_image.pack()
 
 # Ejecutar la aplicación
 root.mainloop()
